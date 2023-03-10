@@ -1,0 +1,38 @@
+---
+sidebar_position: 1
+---
+
+# Logic Gate 逻辑门
+
+## 什么是逻辑门
+
+物理上是设计好的具有布尔函数功能的基础小电路。
+
+基础的逻辑门有：与非门（NAND）、与门（AND）、或门（OR）、非（NOT）门。
+
+比如，一个与非门的符号图：
+
+![img](https://tomorrow0w0.gitbooks.io/nand2tetris-homework/content/assets/Nand1.jpg)
+
+我们可以用国际通用的标准 NAND 符号图来表示 NAND ，也可以用功能语言来描述比如下图中间的 functional specification，当然也可以用真值表来表示。
+
+![img](https://files.catbox.moe/lo2vjo.png)
+
+下图给出了其它几个基础的三个门的符号图。
+
+![img](https://files.catbox.moe/3c89k2.png)
+
+## 符号图和实现图
+
+符号图 是唯一个功能描述，但是并不关心内部是如何实现的（实现可以用不同的方法）。
+实现图 是一个具体的逻辑门的实现，通常我们用虚线框代表隔离内部和外部，内部是具体的实现，外部是输入输出信号。
+
+一个复杂的逻辑门都是由**很多基础门**组成的，那么右下的虚框内就表示了如何实现 **三端输入的与门** 的内部逻辑。
+
+![img](https://files.catbox.moe/r44sge.png)
+
+## 用电路实现逻辑门
+
+a 和 b 代表开关（开关接通代表 1），X 代表 一个灯（灯亮代表 1），还画了一个 + - 是电池。那么只有当 ab 开关都闭合（接通 1）时，灯才会亮（亮 1）。那么左上就实现了一个 与门。同理右下实现了一个或门。
+
+![img](https://files.catbox.moe/svkaef.png)
