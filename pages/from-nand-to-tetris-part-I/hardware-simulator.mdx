@@ -1,0 +1,29 @@
+# HardwareSimulator 硬件模拟
+
+在下载的解压包里`tools->HardwareSimulator.bat`。
+
+> 如果打不开，必须要先安装java环境，[openjdk11下载地址](https://learn.microsoft.com/en-us/java/openjdk/download)
+
+主要包含四个内容：
+
+- 导入芯片，也就是上节提到的HDL文件。
+- 一个测试文件（可以直接使用解压包里的`projects->01`）
+- `HardwareSimulator`硬件模拟软件
+- 一个测试结果对比文件（compare files）
+
+![img](https://files.catbox.moe/chlxd8.png)
+
+## 结果对比
+
+我们可以提供一个`.cmp`后缀的对比文件，来对比`output`的结果是否符合预期。
+
+在测试文件的`output-list`前加一行：
+
+```
+compare-to Xor.cmp,
+output-list a b out;
+```
+
+## 总结
+
+本节主要讲解硬件模拟器的相关文件及其操作。
