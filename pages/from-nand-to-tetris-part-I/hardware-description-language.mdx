@@ -16,10 +16,27 @@
 
 - 首先在逻辑门上标示出 `a`、`b`、`out`。
 - 给虚线的输入或输出端确定转化后的信号，比如经过了`NOT`的`out`就可以改为`nota`。保留实现的`a`、`b`、`out`不变。
-- 编写HDL
+- 编写 HDL
   - 首先编写`interface`，`interface`是定义要编写的逻辑门名称和外部接口（`a`、`b`、`out`）
   - 编写`implementation`，`implementation`是要实现的代码
 
 > 实现代码部分理论上可以不按照顺序随便写，但是建议从左往右写，这样可读性更好。
 
 ![img](https://files.catbox.moe/b448we.png)
+
+```HDL
+/** xor gate: out = (a ANd notb) OR (nota AND b)  */
+CHIP Xor {
+  IN a,b;
+  OUT out;
+
+  PARTS:
+  NOT(in=a,out=nota);
+  NOT(in=b,out=notb);
+  AND(a=a,b=notb,out=aAndNotb);
+  AND(a=nota,b=b,out=notaAndb);
+  OR(a=aAndNotb,b=notaAndb,out=out);
+}
+```
+
+> 注意文件名是芯片名，否则`HardwareSimulator`导入报错
