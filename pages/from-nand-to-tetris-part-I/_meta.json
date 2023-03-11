@@ -1,5 +1,6 @@
 {
   "boolean": "真值",
   "logic-gate": "逻辑门",
-  "hardware-description-language": "硬件描述语言"
+  "hardware-description-language": "硬件描述语言",
+  "hardware-simulator": "硬件模拟器"
 }
