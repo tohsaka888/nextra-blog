@@ -1,0 +1,68 @@
+# Multi Bit Buses 多 bit 总线
+
+之前一直在说对 `1bit` 的布尔数进行操作 ，例如逻辑门输入端 `a` 或 `b`，都是一个`bit` （0 或 1）。但现实中，为了方便都会用一组多 `bits` 来做输入或输出。管这一组就叫 `buses`。
+
+## 十六位加法器
+
+![img](https://files.catbox.moe/z3k2s1.png)
+
+在这张图中我们有两个十六位的输入信号`a`和`b`，加法器的`a`和`b`都会输入一个十六位的二进制数，并且在`out`端输出一个二进制数。表示相加后的结果。
+
+## 在 HDL 内编写总线形式的逻辑门
+
+以一个三组十六位二进制数加法器为例：
+
+- 首先命名输入端和输出端变量名，输入端`first`、`second`、`third`，输出端`out`。
+- 在变量名后添加中括号，括号内填写位数。`first[16]`、`second[16]`、`third[16]`、`out[16]`。
+- 编写代码逻辑。将两数相加后得到的数和第三个数相加得到三数之和。
+
+```HDL
+/*
+ *  Adds three 16-bit numbers
+ */
+
+CHIP Add3Way16 {
+IN first[16], second[16], third[16];
+OUT out[16];
+
+PARTS:
+  Add16(a=first, b=second, out=temp);
+  Add16(a=temp, b=third, out=out);
+}
+```
+
+> a[16]这是计算机编程里的数组写法，声明变量时代表 a 里面有 16 个数。使用时 a[0]代表第一个数,a[1]代表第二个数，以此类推。
+
+## 四位与门
+
+输入端`a`、`b`都是四位二进制，我们需要对他们的每一位进行 And 运算。
+
+```HDL
+CHIP And4 {
+  IN a[4], b[4];
+  OUT out[4];
+
+  PARTS:
+  AND(a=a[0], b=b[0], out=out[0]);
+  AND(a=a[1], b=a[1], out=out[1]);
+  AND(a=a[2], b=a[2], out=out[2]);
+  AND(a=a[3], b=a[3], out=out[3]);
+}
+```
+
+## 次级总线
+
+![img](https://files.catbox.moe/pb0qfd.png)
+
+> lsb->最低有效字节 msb->最高有效字节
+
+
+
+## 生词
+
+`trivial` -> 琐碎的、细小的、微不足道的
+`manipulate` -> 操控
+`convenient` -> 方便的
+`notation` -> 符号
+`conceptually` -> 从概念上说
+`overlaps` -> 重叠
