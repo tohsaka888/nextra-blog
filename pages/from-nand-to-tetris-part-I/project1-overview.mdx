@@ -1,0 +1,43 @@
+# 项目 1 预览
+
+## 设计方法/思路
+
+首先，我们只拥有最基础的`Nand`门。之后我们可以用`Nand`门来编写其他基础门（用`Nand`门实现），在我们实现了之后，就可以去使用这些基础门去设计其他的基础门或者复杂的门。
+
+## 需要实现的部分
+
+在`project1`中我们需要实现 15 个逻辑门，他们可以被分为三类：基础型、总线型、多路型
+
+![img](https://files.catbox.moe/4cmuir.png)
+
+## 一些基础概念
+
+### Multiplexor 多路选择器
+
+`Mux`代表一个多路选择器，功能如下：
+
+- 当`sel`值为 0 时输出`a`端的内容。
+- 当`sel`值为 1 时输出`b`端的内容。
+
+选择器还有更高级的用法 例如：
+可以选择 `a` 和 `b` 进行什么样的布尔运算。
+
+如下图：
+
+- 当 `sel` 设置 为 0 时，out 就是 a 和 b 的 “与 And”运算
+- 当 `sel` 设置 为 1 时，out 就是 a 和 b 的 “或 Or”运算
+
+![img](https://files.catbox.moe/lrkawu.png)
+
+### Demultiplexor 反向（逆）多路选择器
+
+用 `Dmux` 表示
+
+当`sel`为 0，`a`端输出`in`信号。
+当`sel`为 1，`b`端输出`in`信号。
+
+![img](https://files.catbox.moe/b4hl80.png)
+
+## 完成项目1
+
+[点击这里查看项目1题解](https://github.com/tohsaka888/nand-to-tetris-part-I-projects/tree/master/01)
