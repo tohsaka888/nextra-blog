@@ -1,0 +1,36 @@
+# Arithmetic Logic Unit(ALU) 算术逻辑单元
+
+![img](https://files.catbox.moe/9tmey4.png)
+
+上图为冯诺依曼体系结构，今天我们要实现的就是其中的`ALU`。
+
+## 简介
+
+`ALU` 由很多操作组成，例如：清零、置一、加、减、与、或、非等等。它在两个输入的基础上，计算一个`function`,并且输出结果。
+
+`f`: 是一群预定义的算术逻辑函数，例如：清零、置一、加、减、与、或、非等等。
+
+![img](https://files.catbox.moe/welqmu.png)
+
+## The Hack ALU
+
+![img](https://files.catbox.moe/urbhnu.png)
+
+`Hack` 的 `ALU`计算一组固定的函数 $out=f_{i}(x, y)$ 这里 `x` 和 `y`是芯片的两个十六位输入，`out`是十六位输出，$f_{i}$是函数表中的其中一个函数。该函数表由 18 个不同的函数组成。我们通过设置六位控制位来决定 ALU 使用哪个函数执行何种操作。
+
+我们是通过将 6 个控制位设置成函数$f_{i}(x, y)$对应的编码，来指示`ALU`来执行该函数。如下图所示：
+
+![img](https://files.catbox.moe/rd0es6.png)
+
+下图是`ALU`的功能描述图：
+
+![img](https://files.catbox.moe/c6xs57.png)
+
+下图是`ALU`的真值表：
+
+![img](https://files.catbox.moe/4pf8lw.png)
+
+为什么这么设计，我们已`x-1`为例：
+
+- 首先，`zx`和 `nx`设置为 0，因为我们不需要改变`x`
+- 然后，我们需要先把`y`全部变为0，再全部按位取反，得到`111...111`正好为-1的补码，所以`zy=1`且`ny=1`
