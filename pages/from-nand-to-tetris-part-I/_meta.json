@@ -4,5 +4,9 @@
   "hardware-description-language": "硬件描述语言",
   "hardware-simulator": "硬件模拟器",
   "multi-bit-buses": "多bit总线",
-  "project1-overview": "项目1预览"
+  "project1-overview": "项目1预览",
+  "binary-numbers": "二进制数",
+  "binary-addition": "二进制加法",
+  "negative-numbers": "负数",
+  "arithmetic-logic-unit": "算术逻辑单元"
 }
