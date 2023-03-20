@@ -66,7 +66,7 @@ NOT(x OR y) = NOT(x) AND NOT(y)
 
 通过布尔恒等式来简化布尔代数，例如：
 
-```
+```js copy
   NOT(NOT(x) AND NOT(x OR y))
 = NOT(NOT(x) AND (NOT(x) AND NOT(y)))
 = NOT(NOT(x) AND NOT(x) AND NOT(y))
