@@ -1,0 +1,31 @@
+# Flip Flops 触发器
+
+触发器是计算机里最基本的时序单位，在课程中我们使用**数据触发器**(*Data Flip-Flops*，DFF或称D触发器)，
+其接口包含1比特位的输入和1比特位的输出。另外，DFF有个时钟输入，根据主时钟信号连续的交变。数据和时钟的输入是的DFF
+能够实现基于时间的行为$$out(t)=in(t-1)$$，这里`in`和`out`是时钟的输入和输出值，`t`是当前时钟的周期。
+换句话说，DFF简单的讲前一个时间周期的输入值作为当前周期的输出。
+
+![img](https://files.catbox.moe/mg9jym.png)
+
+在本课程中DFF和NAND一样是一个提供的基础单元，不需要我们实现。
+
+## 1-bit Register
+
+![img](https://files.catbox.moe/58bs5q.png)
+
+目的： 一直记住某一个值，直到需要加载一个新的值
+
+![img](https://files.catbox.moe/joj2pk.png)
+
+那么，如何实现这样一个寄存器呢？
+
+我们可以通过一个DFF和一个Mux来实现。
+
+![img](https://files.catbox.moe/gqpsxz.png)
+
+我们来分析一下：
+
+- Mux的`in`和`out`分别为这一轮的`in`和**上一轮**的`out`
+- 根据`load`来判断
+  - `load`为0记忆上一轮的`out`
+  - `load`为1记忆当前的`in`
