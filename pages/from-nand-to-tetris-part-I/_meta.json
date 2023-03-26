@@ -12,5 +12,7 @@
   "sequential-logic":"时序逻辑",
   "flip-flops": "触发器",
   "memory-units": "存储单元",
-  "counters": "计数器"
+  "counters": "计数器",
+  "machine-language-overview": "机器语言概览",
+  "machine-language-elements": "机器语言组成元素"
 }
