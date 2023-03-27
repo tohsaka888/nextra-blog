@@ -1,0 +1,111 @@
+# The Hack Computer and Machine Language Hack 计算机和机器语言
+
+## 硬件部分
+
+下图是 Hack 计算机的简单示意图：
+
+![img](https://files.catbox.moe/lrtqc9.png)
+
+Hack 计算机是一个 16 位机器，组成部分如下：
+
+- Data Memory（_RAM_） 数据存储器
+- Instruction Memory（_ROM_） 指令存储器
+- Central Processing Unit（_CPU_） 中央处理器
+- 指令总线/数据总线/地址总线
+
+## 软件部分
+
+![img](https://files.catbox.moe/bgxyme.png)
+
+Hack 的机器语言分为两种指令：
+
+- 16bit **A-指令**
+- 16bit **C-指令**
+
+Hack 程序 = 使用机器语言编写的一连串指令序列
+
+## 控制
+
+![img](https://files.catbox.moe/hjq58c.png)
+
+大致流程如下：
+
+- ROM 加载 Hack 程序
+- 点击`Reset`按钮
+- 程序执行
+
+## 寄存器
+
+![img](https://files.catbox.moe/pmmlam.png)
+
+Hack 机器语言有三种寄存器
+
+- D 寄存器 存储数据 Data
+- A 寄存器 存储地址 Address 或者 数据
+- M 寄存器 M 代表由地址 A 寻址的 16 位随机存储器（RAM）。通俗的说就是 A 中存储的地址索引到的寄存器。
+
+> A 是一个寄存器，它存储着 RAM 中要寻址的地址索引。M 寄存器则是通过 A 寄存器存储的地址索引在 RAM 中对应地址的存储器单元。通过 A 寄存器选择要访问的内存地址，可以将数据存储到 M 寄存器中或从 M 寄存器中读取数据。
+
+## A-指令
+
+写法： `@value`
+
+其中，`value` 是一个十进制数或者一个内存地址，用于设置 `A` 寄存器的值。
+
+代表把 `A` 寄存器 设置成 数值。同时 `M` 寄存器，被设置成 `A` 索引到的存储器里的某一个寄存器。
+
+当 `CPU` 执行 `A-指令`时，它会将指令中给定的 `value` 值加载到 `A` 寄存器中，这使得 `A` 寄存器中存储着 `value` 所代表的值。这个指令常常用于告诉 `CPU` 从一个内存地址读取数据，或者将数据存储到一个内存地址。
+
+例如： `@21`
+
+1. 将`A-寄存器`设置为21。
+1. 将`M寄存器`设置成`A寄存器`索引的第21号寄存器
+
+例如： 将`RAM[100]`设置为-1。
+
+```assembly
+@100
+M=-1
+```
+
+![img](https://files.catbox.moe/s7jvi3.png)
+
+## C-指令 
+
+语法：
+
+```
+comp dest jump
+```
+
+- comp(*computation*) 表示要执行的计算
+- dest(*destination*) 指定要将计算结果存储在哪个寄存器
+- jump 用于控制程序流的转移，根据此字段的值来决定跳转到哪里执行后续的指令
+
+- JGT：跳转到指定地址，当结果大于零时。
+- JEQ：跳转到指定地址，当结果等于零时。
+- JGE：跳转到指定地址，当结果大于等于零时。
+- JLT：跳转到指定地址，当结果小于零时。
+- JNE：跳转到指定地址，当结果不等于零时。
+- JLE：跳转到指定地址，当结果小于等于零时。
+- JMP：直接跳转到指定地址。
+
+例如：
+
+把 D寄存器 设置成 -1
+
+```
+D=-1
+```
+
+例如：
+
+把数据存储区的300号寄存器设置成 D寄存器 - 1的结果
+
+```
+@300
+M=D-1
+```
+
+![img](https://files.catbox.moe/1c0ae5.png)
+
