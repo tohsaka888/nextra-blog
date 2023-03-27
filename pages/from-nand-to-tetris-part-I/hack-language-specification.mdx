@@ -1,0 +1,74 @@
+# Hack Language Specification Hack 语言规范
+
+## 执行过程
+
+![img](https://files.catbox.moe/p830mf.png)
+
+有两种方式来表达相同的语义：
+
+- 二进制代码
+- 符号语言
+
+通过将符号语言编译成二进制代码来执行。
+
+### A-指令：符号和二进制语法
+
+语义：将`A Register`赋值为`value`。
+
+符号语法：
+
+```
+@value
+```
+
+`value`是：
+
+- 一个非负的十进制常量 （$\le 2^{15}-1$）
+- 一个符号代表一个这样的常量
+
+> 最左边的一位为0，代表`A-指令`。
+
+例如：
+
+`@21`翻译为：`0000000000010101`
+
+![img](https://files.catbox.moe/7riczb.png)
+
+### C-指令：符号和二进制语法
+
+符号语法：
+
+```
+dest = comp;jump
+```
+
+二进制语法:
+
+```
+1 1 1 a c1 c2 c3 c4 c5 c6 d1 d2 d3 j1 j2 j3
+```
+
+- 最左边的1 代表`C-指令`，然后以此两位`1`并没有使用，惯例设置为1
+- `a c1...c6`代表`comp`，决定选择哪写寄存器，参与什么运算
+- `d1...d3`代表`dest`，决定结果存在哪里
+- `j1...j3`代表`jump`，判断计算结果和0的关系，决定是否跳转
+
+![img](https://files.catbox.moe/zlatlv.png)
+
+对照表：
+
+![img](https://files.catbox.moe/pwuj6k.png)
+
+## Hack程序
+
+Hack程序允许的语法：
+
+- 一行一个指令
+- 允许空格
+- 允许注释 （通过`//`的方式）
+
+![img](https://files.catbox.moe/l5vw1a.png)
+
+最后，我们写好的汇编语言，经过汇编器，翻译成0101xxx之后，加载到CPU就能执行了。
+
+![img](https://files.catbox.moe/mgird3.png)
