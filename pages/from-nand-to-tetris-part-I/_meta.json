@@ -14,5 +14,7 @@
   "memory-units": "存储单元",
   "counters": "计数器",
   "machine-language-overview": "机器语言概览",
-  "machine-language-elements": "机器语言组成元素"
+  "machine-language-elements": "机器语言组成元素",
+  "the-hack-computer-and-machine-language":"Hack计算机和机器语言",
+  "hack-language-specification": "Hack语言规范"
 }
