@@ -1,0 +1,205 @@
+# Hack Programming Part 2 Hack 编程 2
+
+## Branching 条件判断
+
+我们需要设计这样一段程序，伪代码如下：
+
+```
+if R0 > 0
+   R1 = 1
+else
+   R1 = 0
+```
+
+如果要实现这样的条件判断，我们可以编写出如下的 Hack 汇编语言：
+
+```asm
+@R0
+D=M // D = RAM[0]
+
+@8
+D; JGT // if D > 0 then goto line 8
+
+@R1
+M=0 // R1 = 0
+@10
+0;JMP // goto line 10
+
+@R1
+M=1 // R1 = 1
+
+@10
+0; JMP
+```
+
+以上代码可以完美运行，但是可读性极差，阅读程序的过程中，我们甚至需要自己去数行数。
+
+> "Instead of imagining that our main task as programmers is to instruct a
+> computer what to do, > let us concentrate rather on explaining to human beings
+> what we want a computer to do."
+
+### Symbolic Reference 符号引用
+
+我们可以通过在某段代码前添加一个`label`来指代当前的位置，例如：
+
+```asm copy
+@R0
+D=M
+
+@POSITIVE
+D; JGT // if R0 > 0 then goto POSITIVE
+
+// else
+@R1
+M=0
+@END
+0; JMP
+
+(POSITIVE)
+@R1
+M=1
+
+(END)
+@END
+0; JMP
+```
+
+声明语法：
+
+```
+(LABEL)
+// line 8
+```
+
+在上例中，LABEL声明指代的是它下一行的所在的行数。
+
+调用语法：
+
+```
+@LABEL
+```
+
+在上例中代表取出`LABEL`所指代的行数。
+
+> 事实上在汇编器把汇编语言翻译成机器语言之前。会先把这些 **符号引用** 转成最开始不易读懂的样子，如下图右侧，然后再翻译成机器语言。
+
+![img](https://files.catbox.moe/8gzj42.png)
+
+## Variables 变量
+
+我们需要设计一个程序，伪代码如下:
+
+```
+temp = R1
+R1 = R0 
+R0 = temp
+```
+
+由此可见，其实就是交换两数的值，最好的解决方法是引入一个中间变量。所以，我们如何在汇编语言中定义变量呢？
+
+```asm
+// 自定义变量
+@temp
+```
+
+在汇编器翻译成机器语言之前，会先处理这个`temp`。处理过程如下：
+
+- 汇编从RAM第16个寄存器开始找，如果发现空闲的寄存器。
+- 将空闲的寄存器的地址给temp
+
+如下：
+
+```asm copy
+// Program: Flip.asm
+// flips the value of RAM[0] and RAM[1]
+
+// temp = R1
+// R1 = R0
+// R0 = temp
+
+@R1
+D=M 
+// 假设第16个寄存器空闲
+@temp // 相当于@16
+M=D // temp = R1
+
+@R0
+D=M
+@R1
+M=D // R1 = R0
+
+@temp
+D=M 
+@R0
+M=D // R0 = temp
+
+(END)
+@END
+0; JMP
+```
+
+![img](https://files.catbox.moe/8znmw3.png)
+
+## Iteration 循环
+
+我们需要设计一个累加程序，伪代码如下：
+
+```
+// R1 = 1 + 2 + 3 + ... + R0
+n = R0
+i = 1
+sum = 0
+
+LOOP:
+  if i > n goto STOP
+  sum = sum + i 
+  i++
+  goto LOOP
+
+STOP:
+  R1 = sum
+```
+
+我们根据伪代码编写如下：
+
+```asm copy
+@R0
+D=M 
+@n 
+M=D // n = R0 
+
+@i 
+M = 1 // i = 1
+
+@sum
+M = 0 // sum = 0
+
+(LOOP)
+@i
+D=M 
+@n
+D=D-M
+@STOP
+D; JGT // if i > n then goto STOP
+
+@i 
+D=M 
+@sum
+M=D+M // sum += i 
+
+@i
+M=M+1 // i += 1
+
+@LOOP
+0; JMP // goto LOOP
+
+(STOP)
+@sum
+D=M
+@R1
+M=D // R1 = sum
+
+(END)
+@END
+0; JMP
+```
