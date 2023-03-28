@@ -16,5 +16,9 @@
   "machine-language-overview": "机器语言概览",
   "machine-language-elements": "机器语言组成元素",
   "the-hack-computer-and-machine-language":"Hack计算机和机器语言",
-  "hack-language-specification": "Hack语言规范"
+  "hack-language-specification": "Hack语言规范",
+  "input-and-output": "输出/输出设备",
+  "hack-programming-part-1": "Hack编程1",
+  "hack-programming-part-2": "Hack编程2",
+  "hack-programming-part-3": "Hack编程3"
 }
