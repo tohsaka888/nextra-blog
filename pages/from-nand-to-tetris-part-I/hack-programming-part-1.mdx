@@ -1,0 +1,78 @@
+# Hack Programming Part 1 Hack编程1
+
+在开始之前，我们需要回顾一下之前提及的两种指令：
+
+- [A-指令](/from-nand-to-tetris-part-I/the-hack-computer-and-machine-language#a-指令)
+- [C-指令](/from-nand-to-tetris-part-I/the-hack-computer-and-machine-language#c-指令)
+
+## CPU Emulator
+
+我们编写的一个两数相加的汇编程序如下：
+
+```asm copy
+// Program: Add2.asm
+// Computes: RAM[2] = RAM[0] + RAM[1]
+// Usage: put values in RAM[0], RAM[1]
+
+@0
+D=M // D = RAM[0]
+
+@1
+D=D+M // D = RAM[0] + RAM[1]
+
+@2
+M=D // RAM[2] = RAM[0] + RAM[1]
+```
+
+![img](https://files.catbox.moe/cuggi3.png)
+
+当然如果点击“一直执行”，程序并不会停在第6行结束，而是不受控的一直往下执行。
+避免这种情况。只需添加一个简单的无限循环就可以了。
+
+```asm
+//设置 A为6(上面程序总共有6行指令)
+@6 
+
+// 无条件跳转到ROM[A]，也就是第六行，于是重复执行。
+0;JMP 
+```
+
+![img](https://files.catbox.moe/gtnhhk.png)
+
+## 内置符号
+
+Hack汇编语言有一些内置符号：
+
+`R0...R15`代表`0...15`。
+
+> 注意：Hack是大小写敏感的！`R5`和`r5`是两个不同的符号。
+
+这些符号可以被用来标识“虚拟寄存器”。
+
+这么设计的好处是可读性更好，例如：
+
+```asm
+// RAM[5] = 15
+@15
+D=A 
+
+@5
+M=D
+```
+
+可以这样改写：
+
+```asm
+@15
+D=A 
+
+@R5 
+M=D
+```
+
+这样我们可以区分A Register是存的地址还是数值。
+
+![img](https://files.catbox.moe/5gol1o.png)
+
+![img](https://files.catbox.moe/6hg0n7.png)
+
