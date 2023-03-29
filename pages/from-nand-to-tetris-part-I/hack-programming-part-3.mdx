@@ -1,1 +1,206 @@
 # Hack Programming Part 3 Hack编程3
+
+## Pointer 指针
+
+首先我们先来看下面一个例子：
+
+```
+arr=100
+n=10
+i=0
+LOOP:
+  if i = n goto STOP
+  arr[i] = -1
+  i++
+
+STOP
+```
+
+即将数组的每个元素赋值为-1。
+
+### 循环之前
+
+我们先完成循环之前的部分：
+
+```asm
+// arr = 100
+@100
+D=A
+@arr
+M=D
+
+// n = 10
+@10
+D=A
+@n
+M=D
+
+// i = 0
+@i
+M=0
+```
+
+在上面这段代码中，我们假设数组的基地址是100，长度为10。定义的变量从第16号寄存器开始查找空闲的寄存器来存放数组的基地址、数组的长度和初始化i。
+
+### 循环部分
+
+> 首先我们必须要知道数组是连续存储的，即如果在第100号寄存器存储了`arr[0]`，那么101号一定存储了`arr[1]`。
+
+由此，我们可以很自然的可以写出以下代码：
+
+```asm copy
+// arr = 100
+@100
+D=A
+@arr
+M=D
+
+// n = 10
+@10
+D=A
+@n
+M=D
+
+// i = 0
+@i
+M=0
+
+(LOOP)
+@n
+D=M
+@i
+D=D-M // n-i
+@STOP
+D; JEQ
+
+// else
+@arr
+D=M
+@i
+A=M+D // A寄存器放在左侧，通常是指针操作，其实很好理解，要拿到下一个的地址，肯定不可能用D寄存器
+M=-1 // arr[i] = -1
+@i
+M=M+1 // i++
+@LOOP
+0; JMP
+
+(STOP)
+@STOP
+0; JMP
+```
+
+- 那些存储内存地址的变量像是`arr`、`i`被称作**指针**。
+- 无论何时我们必须要通过使用指针来写入内存的话，需要用到像是`A=M`之类的命令。
+- 典型的指针语义:将地址寄存器设置为某个内存寄存器的内容
+
+## Input/Output 输入输出设备
+
+这部分涉及`I/O`设备的存储映射，如果忘记了，[点击这里复习](/from-nand-to-tetris-part-I/input-and-output)。
+
+之前提到过，有一些[内置符号](/from-nand-to-tetris-part-I/hack-programming-part-1#内置符号)，其中包括：
+
+- `SCREEN` -> `16384`
+- `KBD` -> `24576`
+
+![img](https://files.catbox.moe/5a7c32.png)
+
+### Screen 屏幕
+
+我们回顾以下Hack电脑中屏幕的规格：
+
+- `256 * 512`个像素点
+- 通过`8KRAM`来进行内存映射，屏幕的每一行由RAM的32个寄存器来控制。
+
+OK，我们继续看这个例子：
+
+在Hack屏幕中画一个长50px宽16px的长方形。
+
+> 提示：将50行的第一个寄存器全部设置为-1。
+
+![img](https://files.catbox.moe/got610.png)
+
+伪代码如下：
+
+```
+addr=SCREEN
+i=0
+n=RAM[0] // 根据RAM[0]设置的值来画，也可以直接设置成50
+
+LOOP:
+if i = n goto STOP
+RAM[addr] = -1 // 111111111111111
+addr = addr + 32
+i = i + 1
+goto LOOP
+
+STOP:
+goto STOP
+```
+
+Hack汇编语言编写如下：
+
+```asm copy
+@SCREEN
+D=A
+@addr
+M=D // addr = SCREEN
+ 
+@R0
+D=M
+@n
+M=D // n=R[0]
+ 
+@i
+M=0
+ 
+(LOOP)
+@i
+D=M
+@n
+D=M-D // n-i
+@STOP
+D; JEQ // if n = i goto STOP
+ 
+//else
+@addr
+A=M
+M=-1 // RAM[addr] = -1
+ 
+@32
+D=A
+@addr
+M=M+D // addr = addr + 32
+ 
+@i
+M=M+1 // i = i + 1
+
+@LOOP
+0; JMP
+ 
+(STOP)
+@STOP
+0; JMP
+```
+
+## Keyboard 键盘
+
+当键盘没有按下时，这个键盘映射的寄存器，就是0。
+
+如果当按住一个键比如`K`，那么对应键盘映射的寄存器就会显示一个对应这个键的值，图中是75。
+
+校验当前键盘按键是否被按下：
+
+- 读取`RAM[24576]`的内容（`KBD`的地址）
+- 如果Register内包含0，没有按键被按下。
+- 否则，寄存器包含当前按键扫描的编码。
+
+![img](https://files.catbox.moe/q33yg6.png)
+
+## 编译
+
+HACK的汇编程序，是一种低级语言，对应有高级语言，比如java。
+
+高级语言可读性更高，我们需要一个**编译器**（*Compiler*）将高级语言翻译为低级语言，例如：汇编。再通过
+**汇编器**将汇编语言翻译为机器语言。
+
+![img](https://files.catbox.moe/wrwtj6.png)
