@@ -1,0 +1,824 @@
+# 开始学习 C++
+
+## 创建第一个 C++程序
+
+```cpp copy
+#include <iostream>
+
+int main()
+{
+  using namespace std;
+  cout << "Come up and C++ me some time." << endl;
+  cout << "You won't regret it!" << endl;
+  return 0;
+}
+```
+
+下面是编译后的程序运行时得到的输出：
+
+![img](https://files.catbox.moe/0v71h4.png)
+
+我们来看一下这个程序的构成：
+
+- 注释，由前缀`//`标识。
+- 预处理器编译指令（简称：预编译指令）`#include`
+- 函数头： `int main()`。
+- 编译指令： `using namespace`
+- 函数体，同`{}`括起来。
+- 使用`C++`的`cout`工具显示消息。
+- 结束`main`函数的`return`语句。
+
+## `main()`函数
+
+去掉修饰后，程序的基本结构如下：
+
+```cpp
+int main()
+{
+  statements
+  return 0;
+}
+```
+
+这几行表明有一个名为`main( )`的函数，并描述了该函数的行为。这
+几行代码构成了函数定义（_function definition_）。该定义由两部分组
+成：
+
+- 第一行 `int main()`叫函数头（_function heading_）
+- 花括号`{}`中包括的部分叫函数体。
+
+函数头对函数与程序其他部分之间的接口进行了总结；函数体是指出函数应做什么的计算机
+指令。在 `C++`中，每条完整的指令都称为语句。所有的语句都以分号结束，因此在输入示例代码时，请不要省略分号。
+
+![img](https://files.catbox.moe/pmc880.png)
+
+### 作为接口的函数头
+
+就目前而言，需要记住的主要一点是，`C++`句法要求 `main()`函数的定义以函数头 `int main()` 开始。
+
+通常，`C++`函数可被其他函数激活或调用，函数头描述了函数与调
+用它的函数之间的接口。位于函数名前面的部分叫做**函数返回类型**，它
+描述的是从函数返回给调用它的函数的信息。函数名后括号中的部分叫
+做**形参列表**（_argument list_）或**参数列表**（_parameter list_）；它描述的是
+从调用函数传递给被调用的函数的信息。
+
+> `int main()`的形式中可以看出`main`函数的返回值是`int`类型。所以通常我们会在`main`函数结束时加上
+> `return 0;`但是，`main`函数也可以不指定返回值，一定要注意，只有`main`函数可以，因为编译器会自动添加。
+
+### 为什么`main()`不能使用其他名称
+
+通常，`C++`程序必须包含一个名为`main()`的函数。由于
+程序只有一个函数，因此该函数必须担负起`main()`的责任。在运行
+C++程序时，通常从`main()`函数开始执行。因此，如果没有`main()`，程
+序将不完整，编译器将指出未定义`main()`函数。
+
+## C++注释
+
+`C++`注释以双斜杠（`//`）打头。注释是程序员为读者提供的说明，
+通常标识程序的一部分或解释代码的某个方面。编译器忽略注释。
+
+> C++也可以使用 C 风格的注释，如下所示。
+
+```cpp
+#include <iostream> /* a C-style comment */
+```
+
+## C++预处理器和`iostream`文件
+
+下面简要介绍一下需要知道的一些知识。如果程序要使用 C++输入
+或输出工具，请提供这样两行代码：
+
+```cpp
+#include <iostream>
+using namespace std;
+```
+
+> 可使用其他代码替换第 2 行，这里使用这行代码旨在简化该程序。
+
+C++和 C 一样，也使用一个预处理器，该程序在进行主编译之前对
+源文件进行处理（第 1 章介绍过，有些 C++实现使用翻译器程序将 C++程
+序转换为 C 程序。虽然翻译器也是一种预处理器，但这里不讨论这种预
+处理器，而只讨论这样的预处理器，即它处理名称以`#`开头的编译指
+令）。不必执行任何特殊的操作来调用该预处理器，它会在编译程序时
+自动运行。
+
+> 翻译器和编译器的区别，翻译器是把一种语言翻译为另一种语言，比如：把 C++翻译为 C，在编译为机器语言。
+> 编译器是一种将高级语言代码转换为机器语言的程序。
+
+预编译指令通过预处理器将`iostream`文件的内容添加到程序中。这
+是一种典型的预处理器操作：在源代码被编译之前，替换或添加文本。
+
+## 头文件名
+
+像 iostream 这样的文件叫做**包含文件**（_include file_）—由于它们被包
+含在其他文件中；也叫**头文件**（_header file_）—由于它们被包含在文件
+起始处。C++编译器自带了很多头文件，每个头文件都支持一组特定的
+工具。C 语言的传统是，头文件使用扩展名 h，将其作为一种通过名称标
+识文件类型的简单方式。例如，头文件`math.h`支持各种 C 语言数学函
+数，但 C++的用法变了。现在，对老式 C 的头文件保留了扩展名
+h（C++程序仍可以使用这种文件），而 C++头文件则没有扩展名。有些
+C 头文件被转换为 C++头文件，这些文件被重新命名，去掉了扩展名
+h（使之成为 C++风格的名称），并在文件名称前面加上前缀 c（表明来
+自 C 语言）。例如，C++版本的`math.h`为`cmath`。有时 C 头文件的 C 版本和
+C++版本相同，而有时候新版本做了一些修改。对于纯粹的 C++头文件
+（如 iostream）来说，去掉 h 不只是形式上的变化，没有 h 的头文件也可
+以包含名称空间。
+
+## 名称空间
+
+如果使用`iostream`，而不是`iostream.h`，则应使用下面的名称空间编
+译指令来使`iostream`中的定义对程序可用：
+
+```cpp
+using namespace std;
+```
+
+这叫做`using`编译指令。最简单的办法是，现在接受这个编译指令，
+以后再考虑它。但这里还是简要地介绍它，以免一头雾水。
+
+名称空间支持是一项 C++特性，旨在让编写大型程序以及将多个
+厂商现有的代码组合起来的程序时更容易，它还有助于组织程序。一个
+潜在的问题是，可能使用两个已封装好的产品，而它们都包含一个名为
+`wanda()`的函数。这样，使用`wanda()`函数时，编译器将不知道指的是哪
+个版本。名称空间让厂商能够将其产品封装在一个叫做名称空间的单元
+中，这样就可以用名称空间的名称来指出想使用哪个厂商的产品。因
+此，`Microflop Industries`可以将其定义放到一个名为`Microflop`的名称空
+间中。这样，其`wanda()`函数的全称为`Microflop::wanda()`；同样，
+`Piscine`公司的`wanda()`版本可以表示为`Piscine::wanda()`。这样，程序就
+可以使用名称空间来区分不同的版本了：
+
+```cpp
+Microflop::wanda("go dancing?"); // use Microflop namespace version
+Piscine::wanda("a fish named Desire"); // use Piscine namespace version
+```
+
+按照这种方式，类、函数和变量便是 C++编译器的标准组件，它们
+现在都被放置在名称空间`std`中。仅当头文件没有扩展名 h 时，情况才是
+如此。这意味着在`iostream`中定义的用于输出的`cout`变量实际上是
+`std::cout`，而`endl`实际上是`std::endl`。因此，可以省略编译指令`using`，以
+下述方式进行编码：
+
+```cpp
+std::cout << "Come up and C++ me some time." << std::endl;
+```
+
+然而，多数用户并不喜欢将引入名称空间之前的代码（使用
+`iostream.h`和`cout`）转换为名称空间代码（使用`iostream`和`std::cout`），除
+非他们可以不费力地完成这种转换。于是，`using`编译指令应运而生。下
+面的一行代码表明，**可以使用`std`名称空间中定义的名称，而不必使用
+`std::`前缀**：
+
+```cpp
+using namespace std;
+```
+
+这个`using`编译指令使得`std`名称空间中的所有名称都可用。这是一
+种偷懒的做法，在大型项目中一个**潜在的问题**。更好的方法是，只使所
+需的名称可用，这可以通过使用`using`声明来实现：
+
+```cpp
+using std::cout;
+using std::endl;
+using std::cin;
+```
+
+用这些编译指令替换下述代码后，便可以使用 cin 和 cout，而不必加
+上 std::前缀。
+
+## 使用 cout 进行 C++输出
+
+现在来看一看如何显示消息。
+
+```cpp
+cout << "Come up and C++ me some time";
+```
+
+双引号括起的部分是要打印的消息。在 C++中，用双引号括起的一
+系列字符叫做字符串，因为它是由若干字符组合而成的。`<<`符号表示该
+语句将把这个字符串发送给`cout`；该符号指出了**信息流动的路径**。`cout`
+是什么呢？它是一个预定义的对象，知道如何显示字符串、数字和单个
+字符等。
+
+![img](https://files.catbox.moe/rai3ze.png)
+
+> 如果熟悉 C 后才开始学习 C++，则可能注意到了，插入运算符（`<<`）看上去就像按位左移
+> 运算符（`<<`），这是一个运算符重载的例子，通过重载，同一个运算符将有不同的含义。编
+> 译器通过上下文来确定运算符的含义。C 本身也有一些运算符重载的情况。例如，`&`符号既表
+> 示地址运算符，又表示按位`AND`运算符；`*` 既表示乘法，又表示对**指针解除引用**。这里重要的
+> 不是这些运算符的具体功能，而是同一个符号可以有多种含义，而编译器可以根据上下文来
+> 确定其含义。
+
+### 控制符 endl
+
+```cpp
+cout << endl;
+```
+
+`endl`是一个特殊的 C++符号，表示一个重要的概念：**另起一行**。在
+输出流中插入`endl`将导致屏幕光标移到下一行开头。诸如`endl`等对于`cout`
+来说有特殊含义的特殊符号被称为控制符（_manipulator_）。和`cout`一
+样，`endl`也是在头文件`iostream`中定义的，且位于名称空间`std`中。
+
+### 换行符
+
+我们还可以使用 C 语言符号`\n`:
+
+```cpp
+cout << "What's next?\n";
+```
+
+显示用引号括起的字符串时，通常使用换行符`\n`，在其他情
+况下则使用控制符`endl`。一个差别是，`endl`确保程序继续运行前刷新输
+出（将其立即显示在屏幕上）；而使用“`\n`”不能提供这样的保证，这意
+味着在有些系统中，有时可能在您输入信息后才会出现提示。
+
+## C++源代码风格
+
+虽然 C++在格式方面赋予了您很大的自由，但如果遵循合理的风
+格，程序将更便于阅读。有效但难看的代码不会令人满意。多数程序员
+都使用程序清单 2.1 所示的风格，它遵循了下述规则。
+
+- 每条语句占一行。
+- 每个函数都有一个开始花括号和一个结束花括号，这两个花括号各占一行。
+- 函数中语句都相对于花括号进行缩进。
+- 与函数名称相关的圆括号周围没有空白。
+
+## C++语句
+
+C++程序是一组函数，而每个函数又是一组语句。C++有好几种语
+句，下面介绍其中的一些。下面的程序提供了两种新的语句。声明语
+句创建变量，赋值语句给该变量提供一个值。另外，该程序还演示了
+`cout`的新功能。
+
+```cpp copy
+// carrots.cpp -- food processing program
+// uses and displays a variable
+
+#include <iostream>
+
+int main()
+{
+  using namespace std;
+
+  int carrots; // declear an interger variable
+
+  carrots = 25; // assign a value to the variable
+  cout << "I have ";
+  cout << carrots;
+  cout << " carrots." << endl;
+  carrots = carrots - 1; // modify the variable
+  cout << "Now i have " << carrots << " carrots." << endl;
+}
+```
+
+![img](https://files.catbox.moe/32b6cu.png)
+
+### 声明语句和变量
+
+计算机是一种精确的、有条理的机器。要将信息项存储在计算机
+中，必须指出信息的存储位置和所需的内存空间。在`C++`中，完成这种
+任务的一种相对简便的方法，是使用声明语句来指出存储类型并提供位
+置标签。
+
+```cpp
+int carrots;
+```
+
+这条语句提供了两项信息：需要的内存以及该内存单元的名称。具
+体地说，这条语句指出程序需要足够的存储空间来存储一个整数，在
+C++中用`int`表示整数。编译器负责分配和标记内存的细节。C++可以处
+理多种类型的数据，而`int`是最基本的数据类型。它表示整数。
+C++的`int`类型可以为正，也可以为负，但是大小范围取决
+于实现。(变量前的是指定存储空间大小和类型)
+
+完成的第二项任务是给存储单元指定名称。在这里，该声明语句指
+出，此后程序将使用名称`carrots`来标识存储在该内存单元中的值。
+`carrots`被称为变量，因为它的值可以修改。在 C++中，所有变量都必须
+声明。
+
+因此，声明通常指出了要存储的数据类型和程序对存储在这里的数
+据使用的名称。在这个例子中，程序将创建一个名为`carrots`的变量，它
+可以存储整数。
+
+![img](https://files.catbox.moe/ku3gcl.png)
+
+程序中的声明语句叫做定义声明（_defining declaration_）语句，简称
+为定义（_definition_）。这意味着它将导致编译器为变量分配内存空间。
+在较为复杂的情况下，还可能有引用声明（_reference declaration_）。这
+些声明命令计算机使用在其他地方定义的变量。通常，声明不一定是定
+义，但在这个例子中，声明是定义。
+
+> 对于声明变量，C++的做法是尽可能在首次使用变量前声明它。
+
+### “聪明的”cout
+
+```cpp
+cout << carrots;
+```
+
+程序没有打印“carrots”，而是打印存储在`carrots`中的整数值，即
+`25`。实际上，这将两个操作合而为一了。首先，`cout`将`carrots`替换为其
+当前值`25`；然后，把值转换为合适的输出字符。
+
+## 其他 C 语句
+
+```cpp copy
+// getinfo.cpp -- input and output
+#include <iostream>
+
+int main()
+{
+  using namespace std;
+
+  int carrots;
+
+  cout << "How many carrots do you have?" << endl;
+
+  cin >> carrots; // C++ input
+
+  cout << "Here are two more.";
+  carrots = carrots + 2;
+  cout << "Now we have " << carrots << " carrots." << endl;
+}
+```
+
+![img](https://files.catbox.moe/jefute.png)
+
+该程序包含两项新特性：用`cin`来读取键盘输入以及将四条输出语
+句组合成一条。下面分别介绍它们。
+
+### 使用`cin`
+
+```cpp
+cin >> carrots;
+```
+
+从这条语句可知，信息从`cin`流向`carrots`。显然，对这一过程有更为
+正式的描述。就像`C++`将输出看作是流出程序的字符流一样，它也将输
+入看作是流入程序的字符流。`iostream`文件将`cin`定义为一个表示这种流
+的对象。输出时，`<<`运算符将字符串插入到输出流中；输入时，`cin`使
+用`>>`运算符从输入流中抽取字符。通常，需要在运算符右侧提供一个变
+量，以接收抽取的信息（符号`<<`和`>>`被选择用来指示信息流的方
+向）。
+
+与`cout`一样，`cin`也是一个智能对象。它可以将通过键盘输入的一系
+列字符（即输入）转换为接收信息的变量能够接受的形式。在这个例子
+中，程序将`carrots`声明为一个整型变量，因此输入被转换为计算机用来
+存储整数的数字形式。
+
+## 类简介
+
+类是 C++中面向对象编程（OOP）的核心概念之一。
+
+类是用户定义的一种数据类型。要定义类，需要描述它能够表示什
+么信息和可对数据执行哪些操作。类之于对象就像类型之于变量。也就
+是说，类定义描述的是数据格式及其用法，而对象则是根据数据格式规
+范创建的实体。
+
+## 函数
+
+C++函数分两种：有返回值的和没有返回值的。在标准 C++函数库
+中可以找到这两类函数的例子，也可以自己创建这两种类型的函数。
+下面首先来看一个有返回值的库函数，然后介绍如何编写简单的函数。
+
+### 使用有返回值的函数
+
+有返回值的函数将生成一个值，而这个值可赋给变量或在其他表达
+式中使用。例如，标准 C/C++库包含一个名为`sqrt()`的函数，它返回平方
+根。假设要计算 6.25 的平方根，并将这个值赋给变量 x，则可以在程序
+中使用下面的语句：
+
+```cpp
+x = sqrt(6.25); // return the value 2.5 and assign it to x
+```
+
+![img](https://files.catbox.moe/1mhzdi.png)
+
+![img](https://files.catbox.moe/vht4z6.png)
+
+情况基本上就是这样，只是在使用函数之前，C++编译器必须知道
+函数的**参数类型**和**返回值类型**。也就是说，函数是返回整数、字符、小
+数、有罪裁决还是别的什么东西？如果缺少这些信息，编译器将不知道
+如何解释返回值。C++提供这种信息的方式是使用**函数原型语句**。
+
+函数原型之于函数就像变量声明之于变量—类型。例
+如，C++库将`sqrt()`函数定义成将一个（可能）带小数部分的数字（如
+6.25）作为参数，并返回一个相同类型的数字。有些语言将这种数字称
+为实数，但是 C++将这种类型称为`double`（将在第 3 章介绍）。`sqrt()`的
+函数原型像这样：
+
+```cpp
+double sqrt(double); // function prototype
+```
+
+第一个 double 意味着`sqrt()`将返回一个`double`值。括号中的`double`意
+味着`sqrt()`需要一个`double`参数。因此该原型对`sqrt()`的描述和下面代码
+中使用的函数相同：
+
+```cpp
+double x;
+x = sqrt(6.25);
+```
+
+原型结尾的分号表明它是一条语句，这使得它是一个原型，而不是
+函数头。如果省略分号，编译器将把这行代码解释为一个函数头，并要
+求接着提供定义该函数的函数体。
+
+在程序中使用`sqrt()`时，也必须提供原型。可以用两种方法来实
+现：
+
+- 在源代码文件中输入函数原型；
+- 包含头文件 cmath（老系统为 math.h），其中定义了原型。
+
+第二种方法更好，因为头文件更有可能使原型正确。对于 C++库中
+的每个函数，都在一个或多个头文件中提供了其原型。请通过手册或在
+线帮助查看函数描述来确定应使用哪个头文件。
+
+> 不要混淆函数原型和函数定义。可以看出，原型只描述函数接口。
+> 也就是说，它描述的是发送给函数的信息和返回的信息。而定义中包含
+> 了函数的代码，如计算平方根的代码。C 和 C++将库函数的这两项特性
+> （原型和定义）分开了。库文件中包含了函数的编译代码，而头文件中
+> 则包含了原型。
+
+### 用户定义的函数
+
+和库函数一样，也可以通过函数名来调用用户定
+义的函数。对于库函数，在使用之前必须提供其原型，通常把原型放到
+`main()`定义之前。但现在您必须提供新函数的源代码。最简单的方法
+是，将代码放在`main()`的后面。
+
+```cpp copy
+// ourfunc.cpp -- define your own function
+
+#include <iostream>
+
+// function prototype for simon()
+void simon(int);
+
+int main()
+{
+  using namespace std;
+  // call the simon() function
+  simon(3);
+  cout << "Pick an integer" << endl;
+  int count;
+  cin >> count;
+  // call it again
+  simon(count);
+  cout << "Done!" << endl;
+}
+
+// implementation of simon function
+void simon(int count)
+{
+  using namespace std;
+  cout << "Simon says touch your toes " << count << " times." << endl;
+}
+```
+
+```bash
+Simon says touch your toes 3 times.
+Pick an integer
+38
+Simon says touch your toes 38 times.
+Done!
+```
+
+![img](https://files.catbox.moe/mu97n2.png)
+
+### 用户定义的有返回值的函数
+
+我们再深入一步，编写一个使用返回语句的函数。
+
+```cpp
+// convert.cpp -- converts stone to pounds
+#include <iostream>
+
+int stone_to_pounds(int);
+
+int main()
+{
+  using namespace std;
+  int stone;
+  cout << "Enter the weight in stone: ";
+  cin >> stone;
+  int pounds = stone_to_pounds(stone);
+  cout << stone << " stone = ";
+  cout << pounds << " pounds." << endl;
+}
+
+int stone_to_pounds(int stone)
+{
+  return 14 * stone;
+}
+```
+
+运行结果：
+
+```bash
+Enter the weight in stone: 38
+38 stone = 532 pounds.
+```
+
+在`main()`中，程序使用`cin`来给整型变量`stone`提供一个值。这个值
+被作为参数传递给`stone_to_pounds()`函数，在该函数中，这个值被赋给变量
+`stone`。然后，`stone_to_pounds()`用关键字`return`将`14*stone`返回给`main()`。这表明
+`return`后面并非一定得跟一个简单的数字。这里通过使用较为复杂的表
+达式，避免了创建一个新变量，将结果赋给该变量，然后将它返回。程
+序将计算表达式的值，并将其返回。如果返回表达式的
+值很麻烦，可以采取更复杂的方式：
+
+```cpp
+int stone_to_pounds(int stone)
+{
+  int pounds = 14 * stone;
+  return pounds;
+}
+```
+
+这两个版本返回的结果相同，但第二个版本更容易理解和修改，因
+为它将计算和返回分开了。
+
+这些例子表明，**函数原型描述了函数接口**，即函数如何与程序的其
+他部分交互。参数列表指出了何种信息将被传递给函数，函数类型指出
+了返回值的类型。程序员有时将函数比作一个由出入它们的信息所指定
+的黑盒子（_black boxes_）（电工用语）。函数原型将这种观点诠释得淋
+漓尽致。
+
+![img](https://files.catbox.moe/5fd7o6.png)
+
+函数特性：
+
+- 有函数头和函数体；
+- 接受一个参数；
+- 返回一个值；
+- 需要一个原型。
+
+## 总结
+
+C++程序由一个或多个被称为函数的模块组成。程序从`main()`函数
+（全部小写）开始执行，因此该函数必不可少。函数由函数头和函数体
+组成。函数头指出函数的返回值（如果有的话）的类型和函数期望通过
+参数传递给它的信息的类型。函数体由一系列位于花括号`{}`中的
+C++语句组成。
+
+有多种类型的 C++语句，包括下述 6 种。
+
+- 声明语句：定义函数中使用的变量的名称和类型。
+- 赋值语句：使用赋值运算符（=）给变量赋值。
+- 消息语句：将消息发送给对象，激发某种行动。
+- 函数调用：执行函数。被调用的函数执行完毕后，程序返回到函数
+  调用语句后面的语句。
+- 函数原型：声明函数的返回类型、函数接受的参数数量和类型。
+- 返回语句：将一个值从被调用的函数那里返回到调用函数中。
+
+## 编程练习
+
+import IsShowCode from "components/IsShowCode";
+
+1. 编写一个 C++程序，它显示您的姓名和地址。
+
+<IsShowCode>
+
+```cpp copy filename="show_name_and_address.cpp"
+// show_name_and_address.cpp
+#include <iostream>
+
+int main()
+{
+  std::cout << "My name is tohsaka888, and i come from CZU.\n";
+}
+```
+
+</IsShowCode>
+
+2. 编写一个 C++程序，它要求用户输入一个以`long`为单位的距离，
+   然后将它转换为码（一 long 等于 220 码）。
+
+<IsShowCode>
+
+```cpp copy filename="convert_distence.cpp"
+// convert_distence.cpp
+#include <iostream>
+
+int convert_distence(int distence);
+
+int main()
+{
+  int distence;
+  std::cout << "please input a distence: ";
+  std::cin >> distence;
+  std::cout << "convert to: " << convert_distence(distence) << " yard" << std::endl;
+}
+
+int convert_distence(int distence)
+{
+  return distence * 220;
+}
+```
+
+</IsShowCode>
+
+3. 编写一个 C++程序，它使用 2 个用户定义的函数，并生成下面的输出。
+
+```bash
+Three blind mice.
+Three blind mice.
+See how they run.
+See how they run.
+```
+
+其中一个函数要调用两次，该函数生成前两行；另一个函数也被调
+用两次，并生成其余的输出。
+
+<IsShowCode>
+
+```cpp copy filename="custom_functions.cpp"
+// custom_functions.cpp
+#include <iostream>
+
+void show_message_1();
+void show_message_2();
+
+int main()
+{
+  show_message_1();
+  show_message_1();
+  show_message_2();
+  show_message_2();
+}
+
+void show_message_1()
+{
+  std::cout << "Three blind mice." << std::endl;
+}
+
+void show_message_2()
+{
+  std::cout << "See how they run." << std::endl;
+}
+```
+
+</IsShowCode>
+
+4．编写一个程序，让用户输入其年龄，然后显示该年龄包含多少个月，如下所示：
+
+```bash
+Enter your age: 29
+contains 348 months
+```
+
+<IsShowCode>
+
+```cpp copy filename="convert_age_to_months.cpp"
+// convert_age_to_months.cpp
+#include <iostream>
+
+int convert_age_to_months(int age);
+
+int main()
+{
+  int age;
+  std::cout << "Enter your age: ";
+  std::cin >> age;
+  std::cout << "contains " << convert_age_to_months(age) << " months" << std::endl;
+}
+
+int convert_age_to_months(int age)
+{
+  return age * 12;
+}
+```
+
+</IsShowCode>
+
+5. 编写一个程序，其中的`main()`调用一个用户定义的函数（以摄
+   氏温度值为参数，并返回相应的华氏温度值）。该程序按下面的格式要
+   求用户输入摄氏温度值，并显示结果：
+
+```bash
+Please enter a Celsius value: 20
+20 degrees Celsius is 68 degrees Fahrenheit.
+```
+
+下面是转换公式：
+
+$fahrenheit = 1.8 \times celsius + 32.0$
+
+<IsShowCode>
+
+```cpp copy filename="convert_celsius_to_fahrenheit.cpp"
+// convert_celsius_to_fahrenheit.cpp
+#include <iostream>
+
+double convert_celsius_to_fahrenheit(double celsius);
+
+int main()
+{
+  int celsius;
+  std::cout << "Please enter a Celsius value: ";
+  std::cin >> celsius;
+
+  std::cout << celsius
+            << " degrees Celsius is "
+            << convert_celsius_to_fahrenheit(celsius)
+            << " degrees Fahrenheit."
+            << std::endl;
+  return 0;
+}
+
+double convert_celsius_to_fahrenheit(double celsius)
+{
+  return 1.8 * celsius + 32.0;
+}
+```
+
+</IsShowCode>
+
+6. 编写一个程序，其`main()`调用一个用户定义的函数（以光年值
+   为参数，并返回对应天文单位的值）。该程序按下面的格式要求用户输
+   入光年值，并显示结果：
+
+```bash
+Enter the number of light years: 4.2
+4.2 light years = 265608 astronomical units.
+```
+
+天文单位是从地球到太阳的平均距离（约 150000000 公里或 93000000 英里），光年是光一年走的距离（约 10 万亿公里或 6 万亿英里）
+（除太阳外，最近的恒星大约离地球 4.2 光年）。请使用 double 类型（参见程序清单 2.4），转换公式为：
+
+$$ 1 light_years = 63240 \times astronomical_units $$
+
+<IsShowCode>
+
+```cpp copy filenae="convert_light_years_to_astronmical_years.cpp"
+// convert_light_years_to_astronmical_years.cpp
+#include <iostream>
+
+double convert_light_years_to_astronmical_years(double light_years);
+
+int main()
+{
+  double light_years;
+  std::cout << "Enter the number of years: ";
+  std::cin >> light_years;
+  std::cout << light_years
+            << " light years = "
+            << convert_light_years_to_astronmical_years(light_years)
+            << " astronomical units.";
+}
+
+double convert_light_years_to_astronmical_years(double light_years)
+{
+  return 63240 * light_years;
+}
+```
+
+</IsShowCode>
+
+7. 编写一个程序，要求用户输入小时数和分钟数。在`main()`函数中，将这两个值传递给一个`void`函数，
+   后者以下面这样的格式显示这两个值：
+
+```bash
+Enter the number of hours: 9
+Enter the number of minutes: 28
+Time: 9:28
+```
+
+<IsShowCode>
+
+```cpp copy filename="show_time.cpp"
+// show_time.cpp
+#include <iostream>
+
+void show_time(int hours, int mins);
+
+int main()
+{
+  int hours, mins;
+  std::cout << "Enter the number of hours: ";
+  std::cin >> hours;
+  std::cout << "Enter the number of mins: ";
+  std::cin >> mins;
+
+  show_time(hours, mins);
+}
+
+void show_time(int hours, int mins)
+{
+  if (hours >= 24 || hours <= 0)
+  {
+    std::cout << "Error input of hour!";
+  }
+  else if (mins >= 60 || mins <= 0)
+  {
+    std::cout << "Error input of minute!";
+  }
+  else
+  {
+    std::cout << "Time: " << hours << ":" << mins << std::endl;
+  }
+}
+```
+
+</IsShowCode>
