@@ -1,0 +1,28 @@
+.switch {
+  width: 48px;
+  height: 24px;
+  background-color: #dbdbdb;
+  display: flex;
+  justify-content: flex-start;
+  border-radius: 50px;
+  align-items: center;
+  cursor: pointer;
+  padding: 0px 6px;
+}
+
+.switch[data-ison="true"] {
+  justify-content: flex-end;
+  background-color: #1890ff;
+}
+
+/* .switch[data-ison="false"] {
+  justify-content: start;
+  background-color: #dbdbdb;
+} */
+
+.handle {
+  width: 16px;
+  height: 16px;
+  background-color: rgb(47, 187, 47);
+  border-radius: 40px;
+}
