@@ -1,4 +1,8 @@
 {
   "chapter01": "预备知识",
-  "chapter02": "开始学习C++"
+  "chapter02": "开始学习C++",
+  "chapter03": "处理数据",
+  "chapter04": "复合类型",
+  "chapter05": "循环和关系表达式",
+  "chapter06": "分支语句和逻辑运算符"
 }
