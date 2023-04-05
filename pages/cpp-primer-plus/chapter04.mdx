@@ -1,0 +1,120 @@
+import { Callout } from "nextra-theme-docs";
+
+# 复合类型
+
+## 数组
+
+数组（_array_）是一种数据格式，能够存储多个同类型的值。例如，数组可以存储 60 个`int`类型的值
+（这些值表示游戏 5 年来的销售量）、12 个`short`值（这些值表示每个月的天数）或 365 个`float`值
+（这些值指出一年中每天在食物方面的开销）。每个值都存储在一个独立的数组元素
+中，计算机在内存中依次存储数组的各个元素。
+
+要创建数组，可使用声明语句。数组声明应指出以下三点：
+
+- 存储在每个元素中的值的类型
+- 数组名
+- 数组中的元素数
+
+声明数组的通用格式如下：
+
+```cpp
+typeName arrayName[arraySize];
+```
+
+表达式`arraySize`指定元素数目，它必须是整型常数（如 10）或`const`值，也可以是常量表达式（如`8 * sizeof（int）`），
+即其中所有的值在编译时都是已知的。具体地说，`arraySize`**不能是变量**，变量的值是在程序运行时设置的。
+然而，本章稍后将介绍如何使用`new`运算符来避开这种限制。
+
+![img](https://files.catbox.moe/y8ep7y.png)
+
+```cpp copy filename="arrayone.cpp"
+// arrayone.cpp -- small arrays of integers
+#include <iostream>
+
+int main(int argc, char const *argv[])
+{
+  using namespace std;
+  int yams[3]; // create array with 3 elements
+  yams[0] = 7; // assign value to first element
+  yams[1] = 8; // assign value to second element
+  yams[2] = 6;
+
+  int yamcosts[3] = {20, 30, 5};
+  // NOTES: if your c++ compiler or translator can't initialize
+  // this array use static int yamcosts[3] instead of int yamcosts[3]
+
+  cout << "Total yams = ";
+  cout << yams[0] + yams[1] + yams[2] << endl;
+  cout << "The package with " << yams[1] << " yams costs ";
+  cout << yamcosts[1] << " cents per yam.\n";
+  int total = yams[0] * yamcosts[0] + yams[1] * yamcosts[1] + yams[2] * yamcosts[2];
+  cout << "The total yam expense is " << total << " cents.\n"
+       << endl;
+  cout << "\nSize of yams array = " << sizeof yams << " bytes.\n";
+  cout << "Size of one element = " << sizeof yams[0] << " bytes.\n";
+  return 0;
+}
+```
+
+下面是该程序的输出：
+
+```bash
+Total yams = 21
+The package with 8 yams costs 30 cents per yam.
+The total yam expense is 410 cents.
+
+
+Size of yams array = 12 bytes.
+Size of one element = 4 bytes.
+```
+
+<Callout type="info">
+
+`sizeof`运算符返回类型或数据对象的长度（单位为字节）。注意，如果将 sizeof 运算符用于数组名，
+得到的将是整个数组中的字节数。但如果将`sizeof`用于数组元素，则得到的将是元素的长度（单位为字节）。
+这表明`yams`是一个数组，而`yams[1]`只是一个`int`变量。
+
+</Callout>
+
+### 数组的初始化规则
+
+`C++`有几条关于初始化数组的规则，它们限制了初始化的时刻，决定了数组的元素数目与初始化器中值的数目不相同时将发生的情况。
+我们来看看这些规则。
+
+只有在定义数组时才能使用初始化，此后就不能使用了，也不能将一个数组赋给另一个数组：
+
+```cpp
+int cards[4] = { 3, 6, 8, 10 };
+int hand[4];
+hand[4] = { 5, 6, 7, 8 }; // not allowed
+hand = cards; // not allowed
+```
+
+然而，可以使用下标分别给数组中的元素赋值。
+
+初始化数组时，提供的值可以少于数组的元素数目。例如，下面的语句只初始化`hotelTips`的前两个元素：
+
+```cpp
+float hotelTips[5] = { 5.0, 2.5 };
+```
+
+如果只对数组的一部分进行初始化，则编译器将把其他元素设置为`0`。
+因此，将数组中所有的元素都初始化为0非常简单—只要显式地将第一个元素初始化为0，然后让编译器将其他元素都初始化为0即可：
+
+```cpp
+long totals[500] = { 0 };
+```
+
+> 如果初始化为`{1}`而不是`{0}`，则第一个元素被设置为1，其他元素都被设置为0。
+
+如果初始化数组时方括号内（`[]`）为空，C++编译器将计算元素个数。例如，对于下面的声明:
+
+```cpp
+short things[] = { 1, 5, 3, 8 };
+```
+
+编译器将使`things`数组包含4个元素。
+
+### 数组初始化方法
+
+## 字符串
