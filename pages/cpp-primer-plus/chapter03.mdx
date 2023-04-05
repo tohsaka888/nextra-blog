@@ -958,13 +958,13 @@ debt = 2147483647
 
 #### 以`{}`方式初始化时进行的转换（C++11）
 
-C++11将使用大括号的初始化称为**列表初始化**（_listinitialization_），
+C++11 将使用大括号的初始化称为**列表初始化**（_listinitialization_），
 因为这种初始化常用于给复杂的数据类型提供值列表。
 它对类型转换的要求更严格。具体地说，列表初始化不允许缩窄（narrowing），
 即变量的类型可能无法表示赋给它的值。例如，不允许将浮点型转换为整型。
 在不同的整型之间转换或将整型转换为浮点型可能被允许，
-条件是编译器知道目标变量能够正确地存储赋给它的值。例如，可将long变量初始化为int值，
-因为long总是至少与int一样长；相反方向的转换也可能被允许，只要int变量能够存储赋给它的long常量：
+条件是编译器知道目标变量能够正确地存储赋给它的值。例如，可将 long 变量初始化为 int 值，
+因为 long 总是至少与 int 一样长；相反方向的转换也可能被允许，只要 int 变量能够存储赋给它的 long 常量：
 
 ```cpp
 const int code = 66;
@@ -977,15 +977,15 @@ x = 31325;
 char c5 = x; // allow
 ```
 
-在上述代码中，初始化c4时，x的值为66，但在编译器看来，x是一个变量，其值可能很大。编译器不会跟踪下述阶段可能发生
-的情况：从x被初始化到它被用来初始化c4。
+在上述代码中，初始化 c4 时，x 的值为 66，但在编译器看来，x 是一个变量，其值可能很大。编译器不会跟踪下述阶段可能发生
+的情况：从 x 被初始化到它被用来初始化 c4。
 
 #### 表达式中的转换
 
 C++将执行两种自动转换：首先，一些类型在出现时便会自动转换；其次，有些类型在与其他类型同时出现在表达式中时将被转换。
 
 先来看看自动转换。在计算表达式时，C++将`bool`、`char`、`unsigned char`、`signed char`和`short`值转换为`int`。
-具体地说，`true`被转换为1，`false`被转换为0。这些转换被称为**整型提升**（_integral promotion_）。
+具体地说，`true`被转换为 1，`false`被转换为 0。这些转换被称为**整型提升**（_integral promotion_）。
 例如，请看下面的语句：
 
 ```cpp
@@ -994,7 +994,7 @@ short ducks = 35;
 short fowl = chickens + ducks;
 ```
 
-为执行第3行语句，C++程序取得`chickens`和`ducks`的值，并将它们转换为`int`。
+为执行第 3 行语句，C++程序取得`chickens`和`ducks`的值，并将它们转换为`int`。
 然后，程序将结果转换为`short`类型，因为结果将被赋给一个`short`变量。
 这种说法可能有点拗口，但是情况确实如此。通常将`int`类型选择为计算机最自然的类型，
 这意味着计算机使用这种类型时，运算速度可能最快。
@@ -1012,13 +1012,13 @@ short fowl = chickens + ducks;
 1. 否则，说明操作数都是整型，因此执行整型提升。
 1. 如果两个操作数都是有符号或无符号的，且其中一个操作数的级别比另一个低，则转换为级别高的类型。
 1. 如果一个操作数为有符号的，另一个操作数为无符号的，且无符号操作数的级别比有符号操作数高，
-则将有符号操作数转换为无符号操作数所属的类型。
+   则将有符号操作数转换为无符号操作数所属的类型。
 1. 否则，如果有符号类型可表示无符号类型的所有可能取值，则将无符号操作数转换为有符号操作数所属的类型。
 1. 否则，将两个操作数都转换为有符号类型的无符号版本。
 
 #### 传递参数时的转换
 
-传递参数时的类型转换通常由C++函数原型控制。然而，也可以取消原型对参数传递的控制，尽管这样做并不明智。
+传递参数时的类型转换通常由 C++函数原型控制。然而，也可以取消原型对参数传递的控制，尽管这样做并不明智。
 
 #### 强制类型转换
 
@@ -1043,7 +1043,7 @@ cout << int ('Q'); // display the integer code for 'Q'
 typeName (value);
 ```
 
-第一种格式来自C语言，第二种格式是纯粹的C++。新格式的想法是，要让强制类型转换就像是函数调用。
+第一种格式来自 C 语言，第二种格式是纯粹的 C++。新格式的想法是，要让强制类型转换就像是函数调用。
 这样对内置类型的强制类型转换就像是为用户定义的类设计的类型转换。
 
 ```cpp
@@ -1082,7 +1082,7 @@ Yes, the code is 90
 ```
 
 首先，将`19.99`和`11.99`相加，结果为`31.98`。将这个值赋给`int`变量`auks`时，它被截短为`31`。
-但在进行加法运算之前使用强制类型转换时，这两个值将被截短为`19`和`11`，因此`bats`和`coots`的值都为30。
+但在进行加法运算之前使用强制类型转换时，这两个值将被截短为`19`和`11`，因此`bats`和`coots`的值都为 30。
 接下来，两条`cout`语句使用强制类型转换将`char`类型的值转换为`int`，再显示它。这些转换导致`cout`将值打印为整数，
 而不是字符。
 
@@ -1096,9 +1096,237 @@ Yes, the code is 90
 因为`ch`的类型为`char`。但通过将`ch`强制转换为`int`类型，`cout`将采用`int`模式
 ，从而打印存储在`ch`中的`ASCII`码。
 
-#### C++11中的`auto`声明
+#### C++11 中的`auto`声明
 
+C++11 新增了一个工具，让编译器能够根据初始值的类型推断变量的类型。
+为此，它重新定义了`auto`的含义。`auto`是一个 C 语言关键字，但很少使用，有关其以前的含义，请参阅第 9 章。
+在初始化声明中，如果使用关键字 auto，而不指定变量的类型，编译器将把变量的类型设置成与初始值相同：
 
+```cpp
+auto n = 100; // n is a int
+auto x = 1.5; // x is double
+auto y = 1.3e12L; // y is long double
+```
 
+然而，自动推断类型并非为这种简单情况而设计的；事实上，如果将其用于这种简单情形，甚至可能误入歧途。
+例如，假设要将`x`、`y`和`z`都指定为`double`类型，并编写了如下代码：
 
+```cpp
+auto x = 0.0; // ok, x is double because 0.0 is a double
+double y = 0; // ok, 0 automatically converted to double
+auto z = 0; // oops, z is int because 0.0 is a int
+```
+
+> 显式地声明类型时，将变量初始化 0（而不是 0.0）不会导致任何问题，但采用自动类型推断时，这却会导致问题。
+
+处理复杂类型，如标准模块库（_STL_）中的类型时，自动类型推断的有时才能显现出来。例如，对于下述 C++98 代码：
+
+```cpp
+std::vector<double> scores;
+std::vector<double>::iterator pv = scores.begin();
+```
+
+C++11 允许将其重写为下面这样：
+
+```cpp
+std::vector<double> scores;
+auto pv = scores.begin();
+```
+
+import IsShowCode from "components/IsShowCode";
+
+## 编程练习
+
+1. 编写一个小程序，要求用户使用一个整数指出自己的身高（单位为英寸），
+   然后将身高转换为英尺和英寸。该程序使用下划线字符来指示输入位置。
+   另外，使用一个`const`符号常量来表示转换因子。
+
+<IsShowCode>
+
+```cpp copy filename="convert_inch.cpp"
+#include <iostream>
+
+int main(int argc, char const *argv[])
+{
+  using namespace std;
+  int height;
+  const int ele = 12;
+  cout << "Please enter your height(in): ";
+  cin >> height;
+  cout << "converted to: " << height / ele << " foot, and " << height % ele << " inches." << endl;
+  return 0;
+}
+```
+
+</IsShowCode>
+
+2. 编写一个小程序，要求以几英尺几英寸的方式输入其身高，并
+   以磅为单位输入其体重。（使用 3 个变量来存储这些信息。）该程序报
+   告其 `BMI`（_Body Mass Index_，体重指数）。为了计算 `BMI`，该程序以英
+   寸的方式指出用户的身高（1 英尺为 12 英寸），并将以英寸为单位的身
+   高转换为以米为单位的身高（1 英寸=0.0254 米）。然后，将以磅为单位
+   的体重转换为以千克为单位的体重（1 千克=2.2 磅）。最后，计算相应
+   的 BMI—体重（千克）除以身高（米）的平方。用符号常量表示各种转
+   换因子。
+
+<IsShowCode>
+
+```cpp copy filename="clac_BMI.cpp"
+#include <iostream>
+
+const int footer_to_inch = 12;
+const float inch_to_meter = 0.0254;
+const float kg_to_pound = 2.2f;
+
+int main(int argc, char const *argv[])
+{
+  using namespace std;
+  int footer, inch, weight;
+  float converted_height, converted_weight, BMI;
+  cout << "Please enter your height(footer): ";
+  cin >> footer;
+  cout << "Please enter your height(inch): ";
+  cin >> inch;
+  cout << "Please enter your weight(footer): ";
+  cin >> weight;
+
+  converted_height = (inch + footer * footer_to_inch) * inch_to_meter;
+  converted_weight = weight / kg_to_pound;
+
+  BMI = converted_weight / (converted_height * converted_height);
+
+  cout << "Your BMI is " << BMI << endl;
+  return 0;
+}
+```
+
+</IsShowCode>
+
+3. 编写一个程序，要求用户以度、分、秒的方式输入一个纬度，然后以度为单位显示该纬度。
+   1 度为 60 分，1 分等于 60 秒，请以符号常量的方式表示这些值。对于每个输入值，应使用一个独立的变量存储它。
+   下面是该程序运行时的情况：
+
+```bash
+Enter a latitude in degrees, minutes, and seconds:
+First, enter the degrees: 37
+Next, enter the minutes of arc: 51
+Finally, enter the seconds of arc: 19
+37 degrees, 51 minutes, 19 seconds = 37.8553 degrees
+```
+
+<IsShowCode>
+
+```cpp copy filename="calc_degrees"
+#include <iostream>
+
+double calc_degrees(double deg, double min, double sec);
+
+int main(int argc, char const *argv[])
+{
+  using namespace std;
+  double deg, min, sec;
+  cout << "Enter a latitude in degrees, minutes, and seconds:" << endl;
+  cout << "First, enter the degrees: ";
+  cin >> deg;
+  cout << "Next, enter the minutes of arc: ";
+  cin >> min;
+  cout << "Finally, enter the seconds of arc: ";
+  cin >> sec;
+  cout << deg << " degrees, "
+       << min << " minutes, "
+       << sec << " seconds = "
+       << calc_degrees(deg, min, sec) << " degrees" << endl;
+
+  return 0;
+}
+
+double calc_degrees(double deg, double min, double sec)
+{
+  return deg + (min / 60) + (sec / 60 / 60);
+}
+```
+
+</IsShowCode>
+
+4. 编写一个程序，要求用户以整数方式输入秒数（使用`long`或`longlong`变量存储），
+   然后以天、小时、分钟和秒的方式显示这段时间。
+   使用符号常量来表示每天有多少小时、每小时有多少分钟以及每分钟有多少秒。该程序的输出应与下面类似：
+
+```bash
+Enter the number of seconds: 31600000
+31600000 seconds = 365 days, 17 hours, 46 minutes, 40 seconds
+```
+
+<IsShowCode>
+
+```cpp copy filename="convert_to_time.cpp"
+#include <iostream>
+
+void convert_to_time(double seconds);
+
+int main(int argc, char const *argv[])
+{
+  using namespace std;
+  int seconds;
+  cout << "Enter the number of seconds: ";
+  cin >> seconds;
+
+  convert_to_time(seconds);
+  return 0;
+}
+
+void convert_to_time(double sec)
+{
+  using namespace std;
+  int days, hours, minutes, seconds;
+  const int day_const = 60 * 60 * 24;
+  const int hour_const = 60 * 60;
+  days = sec / day_const;
+  int temp_seconds = int(sec) % day_const;
+  hours = temp_seconds / hour_const;
+  temp_seconds = temp_seconds % hour_const;
+  minutes = temp_seconds / 60;
+  seconds = temp_seconds % 60;
+
+  cout << int(sec) << " seconds = "
+       << days << " days, "
+       << hours << " hours, "
+       << minutes << " minutes, "
+       << seconds << " seconds" << endl;
+}
+```
+
+</IsShowCode>
+
+5. 编写一个程序，要求用户输入全球当前的人口和美国当前的人口（或其他国家的人口）。
+   将这些信息存储在`long long`变量中，并让程序显示美国（或其他国家）的人口占全球人口的百分比。
+   该程序的输出应与下面类似：
+
+```bash
+Enter the world's population: 6898758899
+Enter the population of the US: 310783781
+The population of the US is 4.50492% of the world's population.
+```
+
+<IsShowCode>
+
+```cpp
+#include <iostream>
+
+int main(int argc, char const *argv[])
+{
+  using namespace std;
+  long long gloabl, usa;
+  cout << "Enter the world's population: ";
+  cin >> gloabl;
+  cout << "Enter the population of the US: ";
+  cin >> usa;
+  cout << "The population of the US is "
+       << double (usa) / double (gloabl) * 100
+       << "% of the world's population.";
+  return 0;
+}
+```
+
+</IsShowCode>
 
