@@ -99,13 +99,13 @@ float hotelTips[5] = { 5.0, 2.5 };
 ```
 
 如果只对数组的一部分进行初始化，则编译器将把其他元素设置为`0`。
-因此，将数组中所有的元素都初始化为0非常简单—只要显式地将第一个元素初始化为0，然后让编译器将其他元素都初始化为0即可：
+因此，将数组中所有的元素都初始化为 0 非常简单—只要显式地将第一个元素初始化为 0，然后让编译器将其他元素都初始化为 0 即可：
 
 ```cpp
 long totals[500] = { 0 };
 ```
 
-> 如果初始化为`{1}`而不是`{0}`，则第一个元素被设置为1，其他元素都被设置为0。
+> 如果初始化为`{1}`而不是`{0}`，则第一个元素被设置为 1，其他元素都被设置为 0。
 
 如果初始化数组时方括号内（`[]`）为空，C++编译器将计算元素个数。例如，对于下面的声明:
 
@@ -113,8 +113,361 @@ long totals[500] = { 0 };
 short things[] = { 1, 5, 3, 8 };
 ```
 
-编译器将使`things`数组包含4个元素。
+编译器将使`things`数组包含 4 个元素。
 
 ### 数组初始化方法
 
+C++11 将使用大括号的初始化（列表初始化）作为一种通用初始化方式，可用于所有类型。数组以前就可使用列表初始化，
+但 C++11 中的列表初始化新增了一些功能。
+
+首先，初始化数组时，可省略等号（`=`）：
+
+```cpp
+double earnings[4] { 1.24e4, 1.6e4, 1.1e4, 1.7e4 };
+```
+
+其次，可不在大括号内包含任何东西，这将把所有元素都设置为零：
+
+```cpp
+unsigned int counts[10] = {};
+float balances[100] {};
+```
+
+第三，列表初始化禁止缩窄转换，这在第 3 章介绍过：
+
+```cpp
+long plifs[] = { 25, 92, 3.0 }; // not allowed
+char slifs[4] = { 'h', 'i', 1122011, '\0' }; // not allowed
+char tlifs[4] = { 'h', 'i', 112, '\0' }; // allowed
+```
+
+在上述代码中，第一条语句不能通过编译，因为**将浮点数转换为整型是缩窄操作**，即使浮点数的小数点后面为零。
+第二条语句也不能通过编译，因为`1122011`超出了`char`变量的取值范围（这里假设 char 变量的长度为 8 位）。
+第三条语句可通过编译，因为虽然 112 是一个`int`值，但它在`char`变量的取值范围内。
+
+C++标准模板库（STL）提供了一种数组替代品—模板类`vector`，而 C++11 新增了模板类 array。
+这些替代品比内置复合类型数组更复杂、更灵活，本章将简要地讨论它们，而第 16 章将更详细地讨论它们。
+
 ## 字符串
+
+C++处理字符串的方式有两种。第一种来自 C 语言，常被称为 C-风格字符串（_C-style string_）。
+
+C-风格字符串具有一种特殊的性质：以空字符（_null character_）结尾，空字符被写作`\0`，
+其`ASCII`码为`0`，用来标记字符串的结尾。例如，请看下面两个声明：
+
+```cpp
+char dog[8] = { 'b', 'e', 'a', 'u', 'x', ' ', 'I', 'I' }; // not a string
+char cat[8] = { 'f', 'a', 't', 'e', 's', 's', 'a', '\0' }; // a string
+```
+
+这两个数组都是`char`数组，但只有第二个数组是字符串。空字符对 C-风格字符串而言至关重要。
+例如，C++有很多处理字符串的函数，其中包括`cout`使用的那些函数。它们都逐个地处理字符串中的字符，
+**直到到达空字符为止**。如果使用`cout`显示上面的`cat`这样的字符串，则将显示前 7 个字符，发现空字符后停止。
+但是，如果使用`cout`显示上面的`dog`数组（它不是字符串），`cout`将打印出数组中的 8 个字母，
+**并接着将内存中随后的各个字节解释为要打印的字符**，直到遇到空字符为止。
+由于空字符（实际上是被设置为 0 的字节）在内存中很常见，因此这一过程将很快停止。
+但尽管如此，还是不应将不是字符串的字符数组当作字符串来处理。
+
+在`cat`数组示例中，将数组初始化为字符串的工作看上去冗长乏味—使用大量单引号，
+且必须记住加上空字符。不必担心，有一种更好的、将字符数组初始化为字符串的方法—只需使用一个用引号括起的字符串即可，
+这种字符串被称为**字符串常量**（_string constant_）或**字符串字面值**（_string literal_），如下所示：
+
+```cpp
+char bird[11] = "Mr. Cheeps"; // the \0 is understood
+char fish[] = "Bubbles"; // let the compiler count
+```
+
+<Callout type="info">
+
+用引号括起的字符串隐式地包括结尾的空字符，因此不用显式地包括它。
+另外，各种`C++`输入工具通过键盘输入，将字符串读入到`char`数组中时，将自动加上结尾的空字符。
+
+当然，应确保数组足够大，能够存储字符串中所有字符—包括空字符。
+使用字符串常量初始化字符数组是这样的一种情况，即**让编译器计算元素数目更为安全**。
+让数组比字符串长没有什么害处，只是会浪费一些空间而已。
+这是因为处理字符串的函数根据空字符的位置，而不是数组长度来进行处理。C++对字符串长度没有限制。
+
+</Callout>
+
+![img](https://files.catbox.moe/06201j.png)
+
+注意，字符串常量（使用双引号）不能与字符常量（使用单引号）互换。
+字符常量（如`'S'`）是字符串编码的简写表示。在`ASCII`系统上，`'S'`只是 83 的另一种写法，因此，
+下面的语句将`83`赋给`shirt_size`：
+
+```cpp
+short size = 'S'; // legal
+short shirt_size = "S"; // illegal type mismatch
+```
+
+<Callout type="error">
+
+`"S"`不是字符常量，它表示的是两个字符（字符 S 和\0）组成的字符串。
+更糟糕的是，`"S"`实际上表示的是**字符串所在的内存地址**。
+因此语句试图将一个内存地址赋给`shirt_size`，显然是不合法的。
+
+</Callout>
+
+### 拼接字符串常量
+
+有时候，字符串很长，无法放到一行中。C++允许拼接字符串字面值，即将两个用引号括起的字符串合并为一个。
+事实上，任何两个由空白（空格、制表符和换行符）分隔的字符串常量都将自动拼接成一个。
+因此，下面所有的输出语句都是等效的：
+
+```cpp copy
+std::cout << "I'd give my right arm to be" " a great violinist.\n";
+std::cout << "I'd give my right arm to be a great violinist.\n";
+std::cout << "I'd give my right ar" "m to be a great violinist.\n";
+```
+
+<Callout type="warning">
+
+注意，拼接时不会在被连接的字符串之间添加空格，
+第二个字符串的第一个字符将紧跟在第一个字符串的最后一个字符（不考虑`\0`）后面。
+**第一个字符串中的`\0`字符将被第二个字符串的第一个字符取代**。
+
+</Callout>
+
+### 在数组中使用字符串
+
+要将字符串存储到数组中，最常用的方法有两种—将数组初始化为字符串常量、将键盘或文件输入读入到数组中。
+
+```cpp copy filename="string.cpp"
+#include <cstring>
+#include <iostream>
+int main(int argc, char const *argv[])
+{
+  using namespace std;
+  const int Size = 15;
+  char name1[Size];
+  char name2[Size] = "C++owboy";
+
+  // NOTE: some implementations may require the static keyword
+  // to initialize the array name2
+  cout << "Howdy! I'm " << name2;
+  cout << "! What's your name?\n";
+  cin >> name1;
+
+  cout << "Well, " << name1 << ", your name has ";
+  cout << strlen(name1) << " letters and is stored\n";
+  cout << "in an array of " << sizeof(name1) << " bytes.\n";
+
+  cout << "Your initial is " << name1[0] << ".\n";
+  name2[3] = '\0';
+  cout << "Here are the fiest 3 characters of my name: ";
+  cout << name2 << endl;
+  return 0;
+}
+```
+
+下面是该程序的运行情况：
+
+```bash
+
+Howdy! I'm C++owboy! What's your name?
+tohsaka888
+Well, tohsaka888, your name has 10 letters and is stored
+in an array of 15 bytes.
+Your initial is t.
+Here are the fiest 3 characters of my name: C++
+```
+
+<Callout type="tip">
+
+该程序使用符号常量来指定数组的长度。程序常常有多条语句使用了数组长度。
+使用符号常量来表示数组长度后，当需要修改程序以使用不同的数组长度时，
+工作将变得更简单—只需在定义符号常量的地方进行修改即可。
+
+</Callout>
+
+![img](https://files.catbox.moe/yy2pch.png)
+
+### 字符串输入
+
+程序`strings.cpp`有一个缺陷，这种缺陷通过精心选择输入被掩盖掉了。
+下面的程序，揭示了字符串输入的技巧。
+
+```cpp copy filename="instr1.cpp"
+#include <iostream>
+
+int main(int argc, char const *argv[])
+{
+  using namespace std;
+  const int ArSize = 20;
+  char name[ArSize];
+  char dessert[ArSize];
+
+  cout << "Enter your name:\n";
+  cin >> name;
+  cout << "Enter your favourite dessert:\n";
+  cin >> dessert;
+  cout << "I have some delicious " << dessert;
+  cout << " for you, " << name << "\n";
+  return 0;
+}
+```
+
+该程序的意图很简单：读取来自键盘的用户名和用户喜欢的甜点，然后显示这些信息。下面是该程序的运行情况：
+
+```bash
+Enter your name:
+Alistair Dreeb
+Enter your favourite dessert:
+I have some delicious Dreeb for you, Alistair
+```
+
+我们甚至还没有对“输入甜点的提示”作出反应，程序便把它显示出来了，然后立即显示最后一行。
+
+`cin`是如何确定已完成字符串输入呢？由于不能通过键盘输入空字符，因此`cin`需要用别的方法来确定字符串的结尾位置。
+`cin`使用**空白（空格、制表符和换行符）来确定字符串的结束位置**，这意味着`cin`在获取字符数组输入时只读取一个单词。
+读取该单词后，`cin`将该字符串放到数组中，并自动在结尾添加空字符。
+
+这个例子的实际结果是，`cin`把`Alistair`作为第一个字符串，并将它放到`name`数组中。
+这把`Dreeb`留在输入队列中。当`cin`在输入队列中搜索用户喜欢的甜点时，它发现了`Dreeb`，
+因此`cin`读取`Dreeb`，并将它放到`dessert`数组中。
+
+![img](https://files.catbox.moe/hwf1n4.png)
+
+另一个问题是，输入字符串可能比目标数组长（运行中没有揭示出来）。
+像这个例子一样使用`cin`，确实不能防止将包含 30 个字符的字符串放到 20 个字符的数组中的情况发生。
+
+### 每次读取一行的字符串输入
+
+#### 面向行输出：`getline()`
+
+`getline()`函数读取整行，它使用通过回车键输入的换行符来确定输入结尾。
+要调用这种方法，可以使用`cin.getline()`。该函数有两个参数。第一个参数是用来存储输入行的数组的名称，
+第二个参数是要读取的字符数。如果这个参数为 20，则函数最多读取 19 个字符，余下的空间用于存储自动在结尾处添加的空字符。
+`getline()`成员函数在读取指定数目的字符或遇到换行符时停止读取。
+
+例如，假设要使用`getline()`将姓名读入到一个包含 20 个元素的`name`数组中。可以使用这样的函数调用：
+
+```cpp
+cin.getline(name, 20);
+```
+
+> 这将把一行读入到`name`数组中—如果这行包含的字符不超过 19 个。
+
+```cpp copy filename="instr2.cpp"
+#include <iostream>
+
+int main(int argc, char const *argv[])
+{
+  using namespace std;
+  const int ArSize = 20;
+  char name[ArSize];
+  char dessert[ArSize];
+
+  cout << "Enter your name:\n";
+  cin.getline(name, ArSize); // reads through newline
+  cout << "Enter your favorite dessert:\n";
+  cin.getline(dessert, ArSize); // reads through newline
+  cout << "I have some delicious " << dessert;
+  cout << " for you, " << name << ".\n";
+  return 0;
+}
+```
+
+下面是该程序的输出：
+
+```bash
+Enter your name:
+Elon Mask
+Enter your favorite dessert:
+shit
+I have some delicious shit for you, Elon Mask.
+```
+
+![img](https://files.catbox.moe/dakuls.png)
+
+#### 面向行的输入：`get()`
+
+`istream`类有另一个名为`get()`的成员函数，该函数有几种变体。其中一种变体的工作方式与`getline()`类似，
+它们接受的参数相同，解释参数的方式也相同，并且都读取到行尾。但`get`并不再读取并丢弃换行符，而是将其留在输入队列中。
+假设我们连续两次调用`get()`：
+
+```cpp
+cin.get(name, ArSize);
+cin.get(dessert, ArSize);
+```
+
+由于第一次调用后，换行符将留在输入队列中，因此第二次调用时看到的第一个字符便是换行符。
+因此`get()`认为已到达行尾，而没有发现任何可读取的内容。如果不借助于帮助，`get()`将不能跨过该换行符。
+
+> 也就是说第二次的`get()`会读取到一个换行符。
+
+幸运的是，`get()`有另一种变体。使用不带任何参数的`cin.get()`调用可读取下一个字符（即使是换行符），
+因此可以用它来处理换行符，为读取下一行输入做好准备。也就是说，可以采用下面的调用序列：
+
+```cpp
+cin.get(name, ArSize);
+cin.get();
+cin.get(dessert, ArSize);
+```
+
+另一种使用`get()`的方式是将两个类成员函数拼接起来（合并），如下所示：
+
+```cpp
+cin.get(name, ArSize).get(); // concatenate member functions
+```
+
+之所以可以这样做，是由于`cin.get(name, ArSize)`返回一个`cin`对象，该对象随后将被用来调用`get()`函数。
+同样，下面的语句将把输入中连续的两行分别读入到数组`name1`和`name2`中，其效果与两次调用`cin.getline()`相同：
+
+```cpp
+cin.getline(name1, ArSize).getline(name2, ArSize);
+```
+
+### 混合输入字符串和数字
+
+混合输入数字和面向行的字符串会导致问题。
+
+```cpp copy filename="numstr.cpp"
+#include <iostream>
+
+int main(int argc, char const *argv[])
+{
+  using namespace std;
+  cout << "What year was your house built?\n";
+  int year;
+  cin >> year;
+  cout << "What is its street address?\n";
+  char address[80];
+  cin.getline(address, 80);
+  cout << "Year built: " << year << endl;
+  cout << "Address: " << address << endl;
+  cout << "Done!\n";
+  return 0;
+}
+```
+
+该程序的运行情况如下：
+
+```bash
+
+What year was your house built?
+1966
+What is its street address?
+Year built: 1966
+Address: 
+Done!
+```
+
+用户根本没有输入地址的机会。问题在于，当`cin`读取年份，将回车键生成的换行符留在了输入队列中。
+后面的`cin.getline()`看到换行符后，将认为是一个空行，并将一个空字符串赋给`address`数组。
+解决之道是，在读取地址之前先读取并丢弃换行符。这可以通过几种方法来完成，
+其中包括使用没有参数的`get()`和使用接受一个`char`参数的`get()`，
+如前面的例子所示。可以单独进行调用:
+
+```cpp copy
+cin >> years;
+cin.get();
+```
+
+也可以利用表达式`cin>>year`返回`cin`对象，将调用拼接起来：
+
+```cpp copy
+(cin >> year).get();
+```
+
+
