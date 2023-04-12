@@ -2212,7 +2212,7 @@ Price: $27.99
 假设程序要读取`100`个字符串，其中最大的字符串包含`79`个字符，而大多数字符串都短得多。
 如果用`char`数组来存储这些字符串，则需要`1000`个数组，其中每个数组的长度为`80`个字符。
 这总共需要`80000`个字节，而其中的很多内存没有被使用。
-另一种方法是，创建一个数组，它包含`1000`个指向char的指针，然后使用`new`根据每个字符串的需要分配相应数量的内存。
+另一种方法是，创建一个数组，它包含`1000`个指向 char 的指针，然后使用`new`根据每个字符串的需要分配相应数量的内存。
 这将节省几万个字节。是根据输入来分配内存，而不是为每个字符串使用一个大型数组。
 另外，还可以使用`new`根据需要的指针数量来分配空间。
 就目前而言，这有点不切实际，即使是使用`1000`个指针的数组也是这样。
@@ -2266,7 +2266,7 @@ Pook at 0x55555556b6d0
 
 来看一下函数`getname()`。它使用`cin`将输入的单词放到`temp`数组中，然后使用`new`分配新内存，以存储该单词。
 程序需要`strle(temp)+ 1`个字符（包括空字符）来存储该字符串，因此将这个值提供给`new`。
-获得空间后，`getname()`使用标准库函数`strcpy()`将temp中的字符串复制到新的内存块中。
+获得空间后，`getname()`使用标准库函数`strcpy()`将 temp 中的字符串复制到新的内存块中。
 该函数并不检查内存块是否能够容纳字符串，但`getname()`通过使用`new`请求合适的字节数来完成了这样的工作。
 最后，函数返回`pn`，这是字符串副本的地址。
 
@@ -2278,14 +2278,14 @@ C++不保证新释放的内存就是下一次使用`new`时选择的内存。
 
 ### 自动存储、静态存储和动态存储
 
-根据用于分配内存的方法，C++有3种管理数据内存的方式：自动存储、静态存储和动态存储（有时也叫作自由存储空间或堆）。
-在存在时间的长短方面，以这3种方式分配的数据对象各不相同。
+根据用于分配内存的方法，C++有 3 种管理数据内存的方式：自动存储、静态存储和动态存储（有时也叫作自由存储空间或堆）。
+在存在时间的长短方面，以这 3 种方式分配的数据对象各不相同。
 
 #### 自动存储
 
 在函数内部定义的常规变量使用自动存储空间，被称为**自动变量**（_automatic variable_），
 这意味着它们在所属的函数被调用时自动产生，在该函数结束时消亡。例如，`temp`数组仅当`getname()`函数活动时存在。
-当程序控制权回到`main()`时，`temp`使用的内存将自动被释放。如果`getname()`返回temp的地址，
+当程序控制权回到`main()`时，`temp`使用的内存将自动被释放。如果`getname()`返回 temp 的地址，
 则`main()`中的`name`指针指向的内存将很快得到重新使用。这就是在`getname()`中使用`new`的原因之一。
 
 实际上，**自动变量是一个局部变量**，其作用域为包含它的代码块。
@@ -2312,7 +2312,7 @@ static double fee = 56.50;
 #### 动态存储
 
 `new`和`delete`运算符提供了一种比自动变量和静态变量更灵活的方法。
-它们管理了一个内存池，这在C++中被称为**自由存储空间**（_free store_）或**堆**（_heap_）。
+它们管理了一个内存池，这在 C++中被称为**自由存储空间**（_free store_）或**堆**（_heap_）。
 该内存池同用于静态变量和自动变量的内存是分开的。
 `new`和`delete`能够在一个函数中分配内存，而在另一个函数中释放它。
 因此，**数据的生命周期不完全受程序或函数的生存时间控制**。
@@ -2336,3 +2336,200 @@ static double fee = 56.50;
 随后便释放它。**C++智能指针有助于自动完成这种任务**。
 
 </Callout>
+
+## 类型组合
+
+本章介绍了数组、结构体和指针。可以各种方式组合它们，下面介绍其中的一些，从结构开始：
+
+```cpp
+struct antarctica_years_end
+{
+  int years;
+  // some really interesting data, etc.
+};
+```
+
+可以创建这种类型的变量：
+
+```cpp
+antarctica_years_end s01, s02, s03;
+```
+
+然后使用成员运算符访问其成员：
+
+```cpp
+s01.year = 1998;
+```
+
+可创建指向这种结构体的指针：
+
+```cpp
+antarctica_years_end* pa = &s02;
+```
+
+将该指针设置为有效地址后，就可使用间接成员运算符来访问成员：
+
+```cpp
+pa->year = 1999;
+```
+
+可创建结构数组：
+
+```cpp
+antarctica_years_end trio[3]; // array of 3 structures
+```
+
+然后，可以使用成员运算符访问元素的成员：
+
+```cpp
+trio[0].year = 2003;
+```
+
+其中`trio`是一个数组，`trio[0]`是一个结构体，而`trio[0].year`是该结构的一个成员。
+由于数组名是一个指针，因此也可使用间接成员运算符：
+
+```cpp
+(trio + 1)->year = 2004;
+```
+
+可创建指针数组：
+
+```cpp
+const antarctica_years_end* arps[3] = {&s01, &s02, &s03};
+```
+
+既然`arp`是一个指针数组，`arp[1]`就是一个指针，可将间接成员运算符应用于它，以访问成员：
+
+```cpp
+cout << arp[1]->year << endl;
+```
+
+可创建指向上述数组的指针：
+
+```cpp
+const antarctica_years_end** ppa = arp;
+```
+
+其中`arp`是一个数组的名称，因此它是第一个元素的地址。
+但其第一个元素为指针，因此`ppa`是一个指针，指向一个指向`const antarctica_years_end`的指针。
+这种声明很容易容错。例如，可能遗漏`const`，忘记`*`，搞错顺序或结构类型。
+下面的示例演示了 C++11 版本的`auto`提供的方便。
+编译器知道 arp 的类型，能够正确地推断出`ppb`的类型：
+
+```cpp
+auto ppb = arp;
+```
+
+在以前，编译器利用它推断的类型来指出声明错误，而现在，可利用它的这种推断能力。
+
+如何使用`ppa`来访问数据呢？由于`ppa`是一个指向结构指针的指针，因此`*ppa`是一个结构指针，可将间接成员运算符应用于它：
+
+```cpp
+cout << (*ppa)->year << endl;
+cout << (*(ppb+1))->year << endl;
+```
+
+由于`ppa`指向`arp`的第一个元素，因此`*ppa`为第一个元素，即`&s01`。
+所以，`(*ppa)->year`为`s01`的`year`成员。在第二条语句中，`ppb+1`指向下一个元素`arp[1]`，即`&s02`。
+其中的括号必不可少，这样才能正确地结合。例如，`*ppa->year`试图将运算符`*`应用于`ppa->year`，
+这将导致错误，因为成员`year`不是指针。
+
+```cpp copy filename="mixtypes.cpp"
+#include <iostream>
+
+struct antarctica_years_endpoint
+{
+  int year;
+};
+
+int main(int argc, char const *argv[])
+{
+  antarctica_years_endpoint s01, s02, s03;
+  s01.year = 1998;
+  antarctica_years_endpoint *pa = &s02;
+  pa->year = 1999;
+  antarctica_years_endpoint trio[3];
+  trio[0].year = 2003;
+  std::cout << trio->year << std::endl;
+  antarctica_years_endpoint *arp[3] = {&s01, &s02, &s03};
+  std::cout << arp[1]->year << std::endl;
+  antarctica_years_endpoint **ppa = arp;
+  auto ppb = arp;
+  std::cout << (*ppa)->year << std::endl;
+  std::cout << (*(ppb + 1))->year << std::endl;
+  return 0;
+}
+```
+
+该程序的输出如下：
+
+```bash
+2003
+1999
+1998
+1999
+```
+
+## 数组的替代品
+
+### 模板类`vector`
+
+模板类`vector`类似于`string`类，也是一种动态数组。
+您可以在运行阶段设置`vector`对象的长度，可在末尾附加新数据，还可在中间插入新数据。
+基本上，它是使用`new`创建动态数组的替代品。实际上，`vector`类确实使用`new`和`delete`来管理内存，但这种工作是自动完成的。
+
+这里不深入探讨模板类意味着什么，而只介绍一些基本的实用知识。
+
+1. 要使用`vector`对象，必须包含头文件`vector`。
+1. `vector`包含在名称空间`std`中，因此可使用`using`编译指令、`using`声明或`std::vector`。
+1. 模板使用不同的语法来指出它存储的数据类型。
+1. `vector`类使用不同的语法来指定元素数。
+
+下面是一些示例：
+
+```cpp
+#include <vector>
+using namespace std;
+vector<int> vi;
+int n;
+cin >> n;
+vector<double> vd(n);
+```
+
+其中，`vi`是一个`vector<int>`对象，`vd`是一个`vector<double>`对象。
+由于`vector`对象在插入或添加值时自动调整长度，因此可以将`vi`的初始长度设置为零。
+但要调整长度，需要使用`vector`包中的各种方法。
+
+一般而言，下面的声明创建一个名为`vt`的`vector`对象，它可存储`n_elem`个类型为`typeName`的元素：
+
+```cpp
+vector<typeName> vt(n_elem);
+```
+
+其中参数`n_elem`可以是整型常量，**也可以是整型变量**。
+
+### 模板类array
+
+`vector`类的功能比数组强大，但付出的代价是效率稍低。
+如果需要的是长度固定的数组，使用数组是更佳的选择，但代价是不那么方便和安全。
+有鉴于此，C++11新增了模板类`array`，它也位于名称空间`std`中。
+与数组一样，`array`对象的长度也是固定的，也使用栈（静态内存分配），而不是自由存储区，因此其效率与数组相同，但更方便，更安全。
+要创建`array`对象，需要包含头文件`array`。`array`对象的创建语法与`vector`稍有不同：
+
+```cpp
+#include <array>
+using namespace std;
+array<int, 5> ai;
+array<double, 4> ad = {1.2, 2.1, 3.43, 4.3};
+```
+
+推而广之，下面的声明创建一个名为`arr`的`array`对象，它包含`n_elem`个类型为`typename`的元素：
+
+```cpp
+array<typename, n_elem> arr;
+```
+
+与创建`vector`对象不同的是，**`n_elem`不能是变量**。
+
+### 比较数组、`vector`对象和`array`对象
+
