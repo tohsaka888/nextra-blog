@@ -2508,11 +2508,11 @@ vector<typeName> vt(n_elem);
 
 其中参数`n_elem`可以是整型常量，**也可以是整型变量**。
 
-### 模板类array
+### 模板类 array
 
 `vector`类的功能比数组强大，但付出的代价是效率稍低。
 如果需要的是长度固定的数组，使用数组是更佳的选择，但代价是不那么方便和安全。
-有鉴于此，C++11新增了模板类`array`，它也位于名称空间`std`中。
+有鉴于此，C++11 新增了模板类`array`，它也位于名称空间`std`中。
 与数组一样，`array`对象的长度也是固定的，也使用栈（静态内存分配），而不是自由存储区，因此其效率与数组相同，但更方便，更安全。
 要创建`array`对象，需要包含头文件`array`。`array`对象的创建语法与`vector`稍有不同：
 
@@ -2533,3 +2533,414 @@ array<typename, n_elem> arr;
 
 ### 比较数组、`vector`对象和`array`对象
 
+```cpp copy filename="choices.cpp"
+#include <array>
+#include <iostream>
+#include <vector>
+
+int main(int argc, char const *argv[])
+{
+  using namespace std;
+  // C, origin C++
+  double a1[4] = {1.2, 2.4, 3.6, 4.8};
+  // C++98 STL
+  vector<double> a2(4); // create vector with 4 elements
+  // no simple way to initialize in C98
+  a2[0] = 1.0 / 3.0;
+  a2[1] = 1.0 / 5.0;
+  a2[2] = 1.0 / 7.0;
+  a2[3] = 1.0 / 9.0;
+  // C++11 -- create and initialize array object
+  array<double, 4> a3 = {3.14, 2.72, 1.62, 1.41};
+  array<double, 4> a4;
+  a4 = a3;
+  // use array notation
+  cout << "a1[2]: " << a1[2] << " at " << &a1[2] << endl;
+  cout << "a2[2]: " << a2[2] << " at " << &a2[2] << endl;
+  cout << "a3[2]: " << a3[2] << " at " << &a3[2] << endl;
+  cout << "a4[2]: " << a4[2] << " at " << &a4[2] << endl;
+  // misdeed
+  a1[-2] = 20.2;
+  cout << "a1[-2]: " << a1[-2] << " at " << &a1[-2] << endl;
+  cout << "a3[2]: " << a3[2] << " at " << &a3[2] << endl;
+  cout << "a4[-2]: " << a4[2] << " at " << &a4[2] << endl;
+  return 0;
+}
+```
+
+下面是该程序的输出示例:
+
+```bash
+a1[2]: 3.6 at 0x7fffffffdfe0
+a2[2]: 0.142857 at 0x55555556bec0
+a3[2]: 1.62 at 0x7fffffffe000
+a4[2]: 1.62 at 0x7fffffffe020
+a1[-2]: 20.2 at 0x7fffffffdfc0
+a3[2]: 1.62 at 0x7fffffffe000
+a4[-2]: 1.62 at 0x7fffffffe020
+```
+
+首先，注意到无论是数组、`vector`对象还是`array`对象，都可使用标准数组表示法来访问各个元素。
+其次，从地址可知，`array`对象和数组存储在相同的内存区域（即栈）中，
+而`vector`对象存储在另一个区域（自由存储区或堆）中。
+第三，注意到可以将一个`array`对象赋给另一个`array`对象；而对于数组，必须逐元素复制数据。
+
+接下来，下面一行代码需要特别注意：
+
+```cpp
+a1[-2] = 20.2;
+```
+
+索引`-2`是什么意思呢？本章前面说过，这将被转换为如下代码：
+
+```cpp
+*(a1 - 2) = 20.2;
+```
+
+其含义如下：找到`a1`指向的地方，向前移两个`double`元素，并将`20.2`存储到目的地。
+也就是说，将信息存储到数组的外面。与 C 语言一样，C++也不检查这种超界错误。
+在这个示例中，这个位置位于`array`对象`a3`中。
+其他编译器可能将`20.2`放在`a4`中，甚至做出更糟糕的选择。**这表明数组的行为是不安全的**。
+
+> 脑袋没问题的话别这么写
+
+## 编程练习
+
+import IsShowCode from "components/IsShowCode";
+
+1. 编写一个 C++程序，如下述输出示例所示的那样请求并显示信息：
+
+```bash
+What is your first name? Betty Sue
+What is your last name? Yewe
+What letter grade do you deserve? B
+What is your age? 22
+Name: Yewe, Betty Sue
+Grade: C
+Age: 22
+```
+
+<Callout type="warning">
+
+注意，该程序应该接受的名字包含多个单词。
+另外，程序将向下调整成绩，即向上调一个字母。
+假设用户请求`A`、`B`或`C`，所以不必担心`D`和`F`之间的空档。
+
+</Callout>
+
+<IsShowCode>
+
+```cpp copy filename="ex4_1.cpp"
+#include <iostream>
+
+int main(int argc, char const *argv[])
+{
+  using namespace std;
+  char first_name[20];
+  char last_name[20];
+  char grade;
+  int age;
+  cout << "What is your first name? ";
+  cin.getline(first_name, 20);
+  cout << "What is your last name? ";
+  cin.getline(last_name, 20);
+  cout << "What letter grade do you deserve? ";
+  cin >> grade;
+  cout << "What is your age? ";
+  cin >> age;
+  cout << "Name: " << last_name << ", " << first_name << endl;
+  cout << "Grade: " << char(grade + 1) << endl;
+  cout << "Age: " << age << endl;
+  return 0;
+}
+```
+
+</IsShowCode>
+
+2. 修改题目 1， 使用`C++ string`类而不是`char`数组。
+
+<IsShowCode>
+
+```cpp copy filename="ex4_2.cpp"
+#include <iostream>
+#include <string>
+
+struct Student
+{
+  std::string first_name;
+  std::string last_name;
+  char grade;
+  int age;
+};
+
+int main(int argc, char const *argv[])
+{
+  using namespace std;
+  Student stu;
+  cout << "What is your first name? ";
+  getline(cin, stu.first_name);
+  cout << "What is your last name? ";
+  getline(cin, stu.last_name);
+  cout << "What letter grade do you deserve? ";
+  cin >> stu.grade;
+  cout << "What is your age? ";
+  cin >> stu.age;
+
+  cout << "Name: " << stu.last_name << ", " << stu.first_name << endl;
+  cout << "Grade: " << char(stu.grade + 1) << endl;
+  cout << "Age: " << stu.age << endl;
+  return 0;
+}
+```
+
+</IsShowCode>
+
+3. 编写一个程序，它要求用户首先输入其名，然后输入其姓；
+   然后程序使用一个逗号和空格将姓和名组合起来，并存储和显示组合结果。
+   请使用`char`数组和头文件`cstring`中的函数。下面是该程序运行时的情形：
+
+```bash
+Enter your first name: Flip
+Enter your last name: Fleming
+Here's the information in a single string: Fleming, Flip
+```
+
+<IsShowCode>
+
+```cpp copy filename="ex4_3.cpp"
+#include <cstring>
+#include <iostream>
+
+int main(int argc, char const *argv[])
+{
+  using namespace std;
+  char first_name[20], last_name[20];
+  cout << "Enter your first name: ";
+  cin.getline(first_name, 20);
+  cout << "Enter your last name: ";
+  cin.getline(last_name, 20);
+  cout << "Here's the information in a single string: "
+       << strcat(strcat(last_name, ", "), first_name);
+
+  return 0;
+}
+```
+
+</IsShowCode>
+
+4. 编写一个程序，它要求用户首先输入其名，再输入其姓；
+   然后程序使用一个逗号和空格将姓和名组合起来，并存储和显示组合结果。
+   请使用`string`对象和头文件`string`中的函数。下面是该程序运行时的情形：
+
+```bash
+Enter your first name: Flip
+Enter your last name: Fleming
+Here's the information in a single string: Fleming, Flip
+```
+
+<IsShowCode>
+
+```cpp copy filename="ex4_4.cpp"
+#include <iostream>
+#include <string>
+
+int main(int argc, char const *argv[])
+{
+  using namespace std;
+  string first_name, last_name;
+  cout << "Enter your first name: ";
+  getline(cin, first_name);
+  cout << "Enter your last name: ";
+  getline(cin, last_name);
+  cout << "Here's the information in a single string: "
+       << last_name + ", " + first_name;
+  return 0;
+}
+```
+
+</IsShowCode>
+
+5. 结构`CandyBar`包含 3 个成员。第一个成员存储了糖块的品牌；
+   第二个成员存储糖块的重量（可以有小数）；第三个成员存储了糖块的卡路里含量（整数）。
+   请编写一个程序，声明这个结构，创建一个名为`snack`的`CandyBar`变量，
+   并将其成员分别初始化为`“Mocha Munch”`、`2.3`和`350`。
+   初始化应在声明`snack`时进行。最后，程序显示`snack`变量的内容。
+
+<IsShowCode>
+
+```cpp copy filename="ex4_5.cpp"
+#include <iostream>
+#include <string>
+
+struct CandyBar
+{
+  std::string band;
+  float weight;
+  int calorie;
+};
+
+int main(int argc, char const *argv[])
+{
+  using namespace std;
+  CandyBar snake = {"Mocha Munch", 2.3, 350};
+  cout << "snake band: " << snake.band << endl;
+  cout << "snake weight: " << snake.weight << endl;
+  cout << "snake calorie: " << snake.calorie << endl;
+  return 0;
+}
+```
+
+</IsShowCode>
+
+6. 结构`CandyBar`包含 3 个成员，如编程练习 5 所示。
+   请编写一个程序，创建一个包含`3`个元素的`CandyBar`数组，并将它们初始化为所选择的值，然后显示每个结构的内容。
+
+<IsShowCode>
+
+```cpp copy filename="ex4_6.cpp"
+#include <iostream>
+#include <string>
+
+struct CandyBar
+{
+  std::string band;
+  float weight;
+  int calorie;
+};
+
+int main(int argc, char const *argv[])
+{
+  using namespace std;
+  CandyBar snacks[3] = {{"test1", 2.4, 100}, {"test2", 2.5, 11}, {"test3", 2.6, 5}};
+  for (size_t i = 0; i < 3; i++)
+  {
+    cout << "band: " << snacks[i].band << endl;
+    cout << "weight: " << snacks[i].weight << endl;
+    cout << "calorie: " << snacks[i].calorie << endl
+         << endl;
+  }
+
+  return 0;
+}
+```
+
+</IsShowCode>
+
+7. `William Wingate`从事比萨饼分析服务。对于每个披萨饼，他都需要记录下列信息：
+
+- 披萨饼公司的名称，可以有多个单词组成。
+- 披萨饼的直径。
+- 披萨饼的重量。
+
+请设计一个能够存储这些信息的结构，并编写一个使用这种结构变量的程序。
+程序将请求用户输入上述信息，然后显示这些信息。请使用`cin`（或它的方法）和`cout`。
+
+<IsShowCode>
+
+```cpp copy filename="ex4_7.cpp"
+#include <iostream>
+#include <string>
+
+struct Pizza
+{
+  std::string company_name;
+  int d;
+  int weight;
+};
+
+int main(int argc, char const *argv[])
+{
+  using namespace std;
+  Pizza pizza;
+  cout << "Please input pizza's company name: ";
+  getline(cin, pizza.company_name);
+  cout << "Please input pizza's d: ";
+  cin >> pizza.d;
+  cout << "Please input pizza's weight: ";
+  cin >> pizza.weight;
+
+  cout << "company name: " << pizza.company_name << endl;
+  cout << "weight: " << pizza.weight << endl;
+  cout << "d: " << pizza.d << endl;
+  return 0;
+}
+```
+
+</IsShowCode>
+
+8. 完成编程练习 7，但使用 new 来为结构分配内存，而不是声明一个结构变量。
+   另外，让程序在请求输入比萨饼公司名称之前输入比萨饼的直径。
+
+<IsShowCode>
+
+```cpp copy filename="ex04_8.cpp"
+#include <iostream>
+#include <string>
+
+struct Pizza
+{
+  std::string company_name;
+  int d;
+  int weight;
+};
+
+int main(int argc, char const *argv[])
+{
+  using namespace std;
+  Pizza *pizza = new Pizza;
+  cout << "Please input pizza's d: ";
+  cin >> pizza->d;
+  cin.get();
+  cout << "Please input pizza's company name: ";
+  getline(cin, pizza->company_name);
+  cout << "Please input pizza's weight: ";
+  cin >> pizza->weight;
+
+  cout << "company name: " << pizza->company_name << endl;
+  cout << "d: " << pizza->d << endl;
+  cout << "weight: " << pizza->weight << endl;
+  delete pizza;
+  return 0;
+}
+```
+
+</IsShowCode>
+
+9. 完成编程练习 6，但使用 new 来动态分配数组，而不是声明一个包含 3 个元素的`CandyBar`数组。
+
+<IsShowCode>
+
+```cpp copy filename="ex4_9.cpp"
+#include <iostream>
+#include <string>
+
+struct CandyBar
+{
+  std::string band;
+  float weight;
+  int calorie;
+};
+
+int main(int argc, char const *argv[])
+{
+  using namespace std;
+  CandyBar *snacks = new CandyBar[3]{
+      {"Mocha Munch", 2.3, 350},
+      {"Big Rabbit", 5, 300},
+      {"Joy Boy", 4.1, 430}
+  };
+  for (size_t i = 0; i < 3; i++)
+  {
+    cout << "band: " << snacks[i].band << endl;
+    cout << "weight: " << snacks[i].weight << endl;
+    cout << "calorie: " << snacks[i].calorie << endl
+         << endl;
+  }
+
+  delete[] snacks;
+  return 0;
+}
+
+```
+
+</IsShowCode>
