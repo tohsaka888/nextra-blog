@@ -1,0 +1,99 @@
+import { Callout } from "nextra-theme-docs";
+
+# 词法分析
+
+## 显式拼接行
+
+两个及两个以上的物理行可用反斜杠（\）拼接为一个逻辑行，规则如下：
+以不在字符串或注释内的反斜杠结尾时，物理行将与下一行拼接成一个逻辑行，并删除反斜杠及其后的换行符。例如：
+
+```py
+if 1900 < year < 2100 and 1 <= month <= 12 \
+   and 1 <= day <= 31 and 0 <= hour < 24 \
+   and 0 <= minute < 60 and 0 <= second < 60:   # Looks like a valid date
+        return 1
+```
+
+<Callout type="warning">
+  以反斜杠结尾的行，不能加注释；反斜杠也不能拼接注释。
+  除字符串字面值外，反斜杠不能拼接形符（如，除字符串字面值外，不能用反斜杠把形符切分至两个物理行）。
+  反斜杠只能在代码的字符串字面值里，在其他任何位置都是非法的。
+</Callout>
+
+## 隐式拼接行
+
+圆括号、方括号、花括号内的表达式可以分成多个物理行，不必使用反斜杠。例如：
+
+```py
+month_names = ['Januari', 'Februari', 'Maart',      # These are the
+               'April',   'Mei',      'Juni',       # Dutch names
+               'Juli',    'Augustus', 'September',  # for the months
+               'Oktober', 'November', 'December']   # of the year
+```
+
+隐式行拼接可含注释；后续行的缩进并不重要；还支持空的后续行。
+隐式拼接行之间没有 `NEWLINE` 形符。三引号字符串支持隐式拼接行（见下文），但不支持注释。
+
+## 格式字符串字面值
+
+格式字符串字面值 或称 `f-string` 是标注了 `'f'` 或 `'F'` 前缀的字符串字面值。
+这种字符串可包含替换字段，即以 `{}` 标注的表达式。其他字符串字面值只是常量，格式字符串字面值则是可在运行时求值的表达式。
+
+双花括号 `'{{'` 或 `'}}'` 被替换为单花括号，花括号外的字符串仍按字面值处理。
+
+单左花括号 `'{'` 标记以 `Python` 表达式开头的替换字段。在表达式后加等于号 `'='`，可在求值后，
+同时显示表达式文本及其结果（用于调试）。
+
+```py
+from datetime import datetime
+import decimal
+
+
+name = "Fred"
+print(f"He said his name is {name!r}")
+# repr() is equivalent to !r
+print(f"He said his name is {repr(name)}")
+
+width = 10
+precision = 4
+value = decimal.Decimal("12.34567")
+print(f"result: {value: {width}.{precision}}")
+
+today = datetime(year=2017, month=1, day=27)
+print(f"{today:%B %d, %Y}")
+
+foo = "bar"
+print(f"{ foo= }")
+
+number = 1024
+print(f"{number:#0x}")
+
+line = "The mill's closed"
+print(f"{line = }")
+
+print(f"{line = :20}")
+
+print(f"{line = !r:20}")
+```
+
+与常规字符串字面值的语法一样，替换字段中的字符不能与外层格式字符串字面值的引号冲突：
+
+```py
+f"abc {a["x"]} def"    # error: outer string literal ended prematurely
+f"abc {a['x']} def"    # workaround: use different quoting
+```
+
+格式表达式中不能有反斜杠，否则会报错：
+
+```py
+f"newline: {ord('\n')}"  # raises SyntaxError
+```
+
+要使用反斜杠转义的值，则需创建临时变量。
+
+```py
+newline = ord('\n')
+f"newline: {newline}"
+```
+
+
