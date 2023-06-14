@@ -1,0 +1,12 @@
+import { Callout } from "nextra-theme-docs";
+
+# 导入系统
+
+一个 `module` 内的 `Python` 代码通过 `importing` 操作就能够访问另一个模块内的代码。 
+`import` 语句是发起调用导入机制的最常用方式，但不是唯一的方式。 
+`importlib.import_module()` 以及内置的 `__import__()` 等函数也可以被用来发起调用导入机制。
+`import` 语句结合了两个操作；它先搜索指定名称的模块，然后将搜索结果绑定到当前作用域中的名称。
+`import` 语句的搜索操作被定义为对 `__import__()` 函数的调用并带有适当的参数。 
+`__import__()` 的返回值会被用于执行 `import` 语句的名称绑定操作。 请参阅 `import` 语句了解名称绑定操作的更多细节。
+
+
