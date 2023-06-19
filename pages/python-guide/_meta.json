@@ -3,5 +3,6 @@
   "datamodel": "数据模型",
   "executionmodel": "执行模型",
   "import": "导入系统",
-  "controlflow": "流程控制"
+  "controlflow": "流程控制",
+  "datastructures": "数据结构"
 }
