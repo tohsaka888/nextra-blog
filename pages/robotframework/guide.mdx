@@ -1,0 +1,92 @@
+# 使用步骤
+
+## 全局安装RobotFramework
+
+```bash
+pip install robotframework
+```
+
+## [Optional]配置Python库用户环境变量
+
+首先默认电脑上已经安装了`Python`。
+
+运行以下命令获取`Python`全局包的安装路径：
+
+```bash
+pip show robotframework
+```
+
+运行结果大致如下：
+
+```bash
+Name: robotframework
+Version: 6.1
+Summary: Generic automation framework for acceptance testing and robotic process automation (RPA)
+Home-page: https://robotframework.org
+Author: Pekka Klärck
+Author-email: peke@eliga.fi
+License: Apache License 2.0
+Location: C:\<Location>\<PythonVersion>\site-packages
+Requires:
+Required-by:
+```
+
+其中`Location`字段就是我们需要的路径
+
+接下来将以下两个路径配置到用户的环境变量：
+
+```bash
+C:\<Location>\<PythonVersion>\
+C:\<Location>\<PythonVersion>\Scripts
+```
+
+使用以下命令校验是否配置成功：
+
+```bash
+➜ robot --version
+Robot Framework 6.1 (Python 3.11.4 on win32)
+```
+
+## 创建一个机器人(Windows)
+
+首先打开一个想要创建机器人项目的路径，在shell中执行：
+
+```bash
+# 下载rcc
+curl -o rcc.exe https://downloads.robocorp.com/rcc/releases/latest/windows64/rcc.exe
+# 创建一个名称为example的robot
+./rcc.exe create example
+# 进入robot项目目录
+cd example
+# 通过上个目录下载下来的rcc来运行
+..\rcc.exe run
+```
+
+## 与IDE集成（VSCode）
+
+首先在`marketplace`中安装两个插件：
+
+- [Robocorp Code](https://marketplace.visualstudio.com/items?itemName=robocorp.robocorp-code)
+- [Robot Framework Language Server](https://marketplace.visualstudio.com/items?itemName=robocorp.robotframework-lsp)
+
+之后用`VSCode`打开安装机器人的项目目录：
+
+```shell
+code <The Path where you install the robot>
+```
+
+## 运行Robot
+
+![qrusw0.png](https://files.catbox.moe/qrusw0.png)
+
+## 设置IDE(VSCode)
+
+首先，在`marketplace`安装[Robot Code](https://marketplace.visualstudio.com/items?itemName=d-biehl.robotcode)
+
+接下来说明一些常用的功能：
+
+![uzuh3g.png](https://files.catbox.moe/uzuh3g.png)
+
+## 界面介绍(VSCode)
+
+![01ttwj.png](https://files.catbox.moe/01ttwj.png)

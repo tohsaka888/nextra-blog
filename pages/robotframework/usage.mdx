@@ -1,0 +1,115 @@
+# 使用步骤
+
+## Variable
+
+为了减少自动化集成中的重复修改，从而引入了变量，当测试中有些需要频繁更改的部分，可以将其提取成变量。
+
+变量大致可以分为三种：普通变量、列表、字典，大致用法如下所示：
+
+```robot
+*** Settings ***
+Documentation    This is my first test case
+
+*** Variables ***
+# define a variable
+${MY-VARIABLE}        my test variable
+${MY-VARIABLE2}       my second test variable
+
+
+${search_filter}      //input[@title="Search"]
+
+# use @ to define a list
+@{LIST}        test1    test2    test3    test4    test5
+
+# use $ to define a dic
+&{dic}        username=admin     password=admin
+
+*** Test Cases ***
+TEST
+    [Tags]    demo    demo2
+    Log       ${MY-VARIABLE}
+    Log       ${MY-VARIABLE2}
+    Log       ${search_filter}
+    Log       ${LIST}[2]
+    Log       ${dic}[username]
+# Minimal task
+#     Log    Done.
+```
+
+`Log`结果如下：
+
+![4t5ve9.png](https://files.catbox.moe/4t5ve9.png)
+
+## keyword
+
+在`robotframework`框架中，所有的测试用例实际上是基于`keyword`的，例如：`Log`实际上就是一个关键字，只不过他是内置的关键字。
+
+当然我们也可以自己定义关键字，例如：
+
+```robot
+*** Keywords ***
+Log username
+    Log         ${dic}[username]
+```
+
+也可以将 keyword 当成函数使用，给他传参：
+
+```robot
+*** Settings ***
+Documentation    This is my first test case
+
+*** Keywords ***
+Log Username
+    Log    ${dic}[username]
+Log Password
+    Log    ${dic}[password]
+Log Username And Password
+    Log    ${dic}[username]
+    Log    ${dic}[password]
+Log Username And Password 1
+    Log Username
+    Log Password
+Log Specific username
+    [Arguments]        ${username}
+    Log                ${username}
+
+*** Variables ***
+${MY-VARIABLE}        my test variable
+${MY-VARIABLE2}       my second test variable
+
+
+${search_filter}      //input[@title="Search"]
+
+@{LIST}        test1    test2    test3    test4    test5
+
+&{dic}        username=admin     password=admin
+&{dic1}       username=user1     password=123456
+
+*** Test Cases ***
+TEST
+    Log Username And Password
+    Log Username And Password 1
+    Log Specific username    ${dic1}[username]
+# Minimal task
+#     Log    Done.
+```
+
+## Resource
+
+假设在两个测试用例中可能有部分关键字或者变量相同，这时我们可以通过`Resource`文件来实现模块化。
+
+首先在`Resource`文件夹中新建`resouce.robot`，之后提取相同的逻辑粘贴在其中就可以了。
+
+使用`Resource`文件也很简单，只需要在`Settings`中指明`Resource`文件所在路径：
+
+```robot
+*** Settings ***
+Resource    ./resources/resources.robot
+
+
+*** Tasks ***
+Resource Test
+    Log Username And Password
+    Log Specific username    ${dic1}[username]
+
+```

@@ -4,5 +4,7 @@
   "executionmodel": "执行模型",
   "import": "导入系统",
   "controlflow": "流程控制",
-  "datastructures": "数据结构"
+  "datastructures": "数据结构",
+  "modules": "模块",
+  "inputoutput": "输入与输出"
 }
