@@ -10,7 +10,7 @@ importers:
     dependencies:
       framer-motion:
         specifier: ^11.0.0
-        version: 11.3.24(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        version: 11.3.27(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       next:
         specifier: ^13.5.1
         version: 13.5.6(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -614,8 +614,8 @@ packages:
   focus-visible@5.2.0:
     resolution: {integrity: sha512-Rwix9pBtC1Nuy5wysTmKy+UjbDJpIfg8eHjw0rjZ1mX4GNLz1Bmd16uDpI3Gk1i70Fgcs8Csg2lPm8HULFg9DQ==}
 
-  framer-motion@11.3.24:
-    resolution: {integrity: sha512-kl0YI7HwAtyV0VOAWuU/rXoOS8+z5qSkMN6rZS+a9oe6fIha6SC3vjJN6u/hBpvjrg5MQNdSnqnjYxm0WYTX9g==}
+  framer-motion@11.3.27:
+    resolution: {integrity: sha512-Uf72PFEZuei/1IeCmGJ236EIl6VUri7SLovtTGg/cOAzMHG01CXXg1aL3ofuTuYr6Sq1QALlcEDaTig0PXb4Dw==}
     peerDependencies:
       '@emotion/is-prop-valid': '*'
       react: ^18.0.0
@@ -2010,7 +2010,7 @@ snapshots:
 
   focus-visible@5.2.0: {}
 
-  framer-motion@11.3.24(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
+  framer-motion@11.3.27(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
     dependencies:
       tslib: 2.6.3
     optionalDependencies:
