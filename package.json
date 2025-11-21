@@ -11,7 +11,7 @@
   "license": "MIT",
   "dependencies": {
     "framer-motion": "^12.0.0",
-    "next": "^14.0.0",
+    "next": "^16.0.0",
     "nextra": "latest",
     "nextra-theme-docs": "latest",
     "react": "^19.0.0",
